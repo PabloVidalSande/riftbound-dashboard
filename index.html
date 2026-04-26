@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0d10">
+<title>Riftbound Tracker — Dashboard</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctext y='20' font-size='20'%3E%F0%9F%92%8E%3C/text%3E%3C/svg%3E">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+  :root {
+    --bg: #0b0d10;
+    --bg-card: #15181d;
+    --bg-card-2: #1c2026;
+    --border: #2a2f37;
+    --text: #e6e9ee;
+    --text-muted: #98a2b3;
+    --accent: #67e8f9;
+    --green: #4ade80;
+    --red: #f87171;
+    --amber: #fbbf24;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text); font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 16px 14px 60px; }
+  header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
+  h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+  h1 .emoji { margin-right: 6px; }
+  h2 { font-size: 14px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 10px; }
+  .updated { font-size: 12px; color: var(--text-muted); }
+  .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .card .lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .card .val { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .card .sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .delta-up { color: var(--green); }
+  .delta-down { color: var(--red); }
+  .delta-flat { color: var(--text-muted); }
+  .chart-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 20px; height: 240px; position: relative; }
+  .movers-grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin-bottom: 20px; }
+  @media (min-width: 640px) { .movers-grid { grid-template-columns: 1fr 1fr; } }
+  .movers-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .mover-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .mover-row:last-child { border-bottom: none; }
+  .mover-row .vn { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--text-muted); }
+  .mover-row .price { white-space: nowrap; }
+  .mover-row .pct { font-weight: 600; min-width: 56px; text-align: right; }
+  .empty { color: var(--text-muted); font-size: 13px; padding: 8px 0; }
+  .footer { margin-top: 32px; text-align: center; font-size: 11px; color: var(--text-muted); }
+  .footer a { color: var(--text-muted); text-decoration: underline; }
+  .stale { background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.4); }
+  .stale .lbl { color: var(--amber); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><span class="emoji">💎</span>Riftbound Tracker</h1>
+    <div class="updated" id="updated">cargando…</div>
+  </header>
+
+  <div class="hero">
+    <div class="card" id="card-total">
+      <div class="lbl">Valor colección USD</div>
+      <div class="val" id="total-usd">—</div>
+      <div class="sub" id="total-sub">TCGplayer market</div>
+    </div>
+    <div class="card" id="card-delta">
+      <div class="lbl">Δ vs snapshot anterior</div>
+      <div class="val" id="delta-usd">—</div>
+      <div class="sub" id="delta-pct">—</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <h2 style="position:absolute; top:14px; left:16px; margin:0;">Histórico</h2>
+    <canvas id="chart"></canvas>
+  </div>
+
+  <div class="movers-grid">
+    <div class="movers-card">
+      <h2 style="color: var(--green);">Top subidas</h2>
+      <div id="ups"></div>
+    </div>
+    <div class="movers-card">
+      <h2 style="color: var(--red);">Top caídas</h2>
+      <div id="downs"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Actualizado por GitHub Actions diariamente.
+    <br>
+    <a href="https://github.com/PabloVidalSande/riftbound-dashboard">Repo dashboard</a> ·
+    Datos: TCGplayer market price (USD) vía <a href="https://tcgcsv.com">TCGCSV</a>.
+  </div>
+</div>
+
+<script>
+const fmtUsd = n => (n == null ? '—' : '$' + Number(n).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+const fmtPct = n => (n == null ? '—' : (n >= 0 ? '+' : '') + Number(n).toFixed(1) + '%');
+const fmtDate = iso => {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }) + ' ' +
+         d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+};
+
+const STALE_DAYS = 2;
+
+async function loadJson(path) {
+  const r = await fetch(path + '?t=' + Date.now());
+  if (!r.ok) throw new Error(path + ' ' + r.status);
+  return r.json();
+}
+
+function renderHero(snapshots, movers) {
+  const last = snapshots[snapshots.length - 1];
+  const prev = snapshots.length >= 2 ? snapshots[snapshots.length - 2] : null;
+  document.getElementById('total-usd').textContent = fmtUsd(last.total_usd);
+
+  const updated = document.getElementById('updated');
+  updated.textContent = 'Snapshot ' + (last.date || 'N/A');
+  if (last.fetched_at) updated.title = 'fetched ' + fmtDate(last.fetched_at);
+
+  // Stale check
+  const lastDate = last.date ? new Date(last.date) : null;
+  const ageDays = lastDate ? Math.floor((Date.now() - lastDate.getTime()) / 86400000) : 0;
+  if (ageDays >= STALE_DAYS) {
+    document.getElementById('card-total').classList.add('stale');
+    document.getElementById('total-sub').textContent = `⚠ snapshot de hace ${ageDays} días`;
+  }
+
+  const dEl = document.getElementById('delta-usd');
+  const pEl = document.getElementById('delta-pct');
+  if (prev && prev.total_usd) {
+    const d = last.total_usd - prev.total_usd;
+    const pct = (d / prev.total_usd) * 100;
+    dEl.textContent = (d >= 0 ? '+' : '') + fmtUsd(d).replace('$+', '$').replace('$-', '-$');
+    dEl.classList.add(d > 0 ? 'delta-up' : d < 0 ? 'delta-down' : 'delta-flat');
+    pEl.textContent = fmtPct(pct);
+  } else {
+    dEl.textContent = '—';
+    pEl.textContent = 'Primera medición';
+  }
+}
+
+function renderChart(snapshots) {
+  const ctx = document.getElementById('chart');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: snapshots.map(s => s.date),
+      datasets: [{
+        data: snapshots.map(s => s.total_usd),
+        borderColor: '#67e8f9',
+        backgroundColor: 'rgba(103,232,249,0.10)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.25,
+        pointRadius: snapshots.length > 30 ? 0 : 3,
+        pointHoverRadius: 5,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => fmtUsd(ctx.parsed.y) } } },
+      scales: {
+        x: { ticks: { color: '#98a2b3', maxTicksLimit: 6 }, grid: { color: '#1c2026' } },
+        y: { ticks: { color: '#98a2b3', callback: v => '$' + v }, grid: { color: '#1c2026' } }
+      }
+    }
+  });
+}
+
+function renderMovers(movers) {
+  const ups = movers.filter(m => m.pct > 0).slice(0, 10);
+  const downs = movers.filter(m => m.pct < 0).slice(0, 10);
+  const upsEl = document.getElementById('ups');
+  const downsEl = document.getElementById('downs');
+  if (!ups.length && !downs.length) {
+    upsEl.innerHTML = '<div class="empty">Sin movers ≥ ±25 % en el último snapshot.</div>';
+    downsEl.innerHTML = '';
+    return;
+  }
+  upsEl.innerHTML = ups.length ? ups.map(m => `
+    <div class="mover-row">
+      <div><div class="vn">${m.variant_number}</div></div>
+      <div class="price">$${m.old_usd.toFixed(2)} → $${m.new_usd.toFixed(2)}</div>
+      <div class="pct delta-up">${fmtPct(m.pct)}</div>
+    </div>`).join('') : '<div class="empty">—</div>';
+  downsEl.innerHTML = downs.length ? downs.map(m => `
+    <div class="mover-row">
+      <div><div class="vn">${m.variant_number}</div></div>
+      <div class="price">$${m.old_usd.toFixed(2)} → $${m.new_usd.toFixed(2)}</div>
+      <div class="pct delta-down">${fmtPct(m.pct)}</div>
+    </div>`).join('') : '<div class="empty">—</div>';
+}
+
+(async () => {
+  try {
+    const [snaps, movers] = await Promise.all([
+      loadJson('data/snapshots.json'),
+      loadJson('data/movers.json'),
+    ]);
+    if (!Array.isArray(snaps) || !snaps.length) {
+      document.querySelector('.wrap').innerHTML = '<p style="color:var(--text-muted);padding:40px 0">Aún no hay datos. El primer snapshot aparece tras la primera ejecución del workflow.</p>';
+      return;
+    }
+    renderHero(snaps, movers);
+    renderChart(snaps);
+    renderMovers(movers || []);
+  } catch (e) {
+    document.querySelector('.wrap').innerHTML = `<p style="color:var(--red);padding:40px 0">Error cargando datos: ${e.message}</p>`;
+  }
+})();
+</script>
+</body>
+</html>
