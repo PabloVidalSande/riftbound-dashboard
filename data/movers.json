@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "variant_number": "SFD-005",
+    "old_usd": 0.04,
+    "new_usd": 0.06,
+    "pct": 50.0
+  },
+  {
+    "variant_number": "OGN-010",
+    "old_usd": 0.1,
+    "new_usd": 0.14,
+    "pct": 40.0
+  },
+  {
+    "variant_number": "SFD-038",
+    "old_usd": 0.05,
+    "new_usd": 0.07,
+    "pct": 40.0
+  },
+  {
+    "variant_number": "SFD-154",
+    "old_usd": 0.05,
+    "new_usd": 0.07,
+    "pct": 40.0
+  },
+  {
+    "variant_number": "OGN-013",
+    "old_usd": 0.14,
+    "new_usd": 0.19,
+    "pct": 35.7
+  },
+  {
+    "variant_number": "SFD-217",
+    "old_usd": 0.1,
+    "new_usd": 0.07,
+    "pct": -30.0
+  },
+  {
+    "variant_number": "SFD-068",
+    "old_usd": 0.04,
+    "new_usd": 0.03,
+    "pct": -25.0
+  },
+  {
+    "variant_number": "SFD-069",
+    "old_usd": 0.08,
+    "new_usd": 0.1,
+    "pct": 25.0
+  }
+]
