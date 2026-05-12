@@ -354,14 +354,14 @@ function badgeClass(b) {
   return '';
 }
 function badgeLabel(b) {
-  if (b.buyout_level === 'confirmed') return '🚨 BUYOUT CONFIRMED';
-  if (b.buyout_level === 'likely')    return '⚡ BUYOUT LIKELY';
-  if (b.buyout_level === 'watch')     return '👀 BUYOUT WATCH';
+  if (b.buyout_level === 'confirmed') return '🚨 BUYOUT CONFIRMADO';
+  if (b.buyout_level === 'likely')    return '⚡ BUYOUT PROBABLE';
+  if (b.buyout_level === 'watch')     return '👀 BUYOUT VIGILAR';
   const m = b.momentum || '';
-  if (m === 'Strong Upward')          return '↑↑ STRONG UPWARD';
-  if (m === 'Upward')                 return '↑ UPWARD';
-  if (m === 'Strong Downward')        return '↓↓ STRONG DOWNWARD';
-  if (m === 'Downward')               return '↓ DOWNWARD';
+  if (m === 'Strong Upward')          return '↑↑ ALZA FUERTE';
+  if (m === 'Upward')                 return '↑ ALZA';
+  if (m === 'Strong Downward')        return '↓↓ BAJADA FUERTE';
+  if (m === 'Downward')               return '↓ BAJADA';
   return b.alert_type || '—';
 }
 
@@ -537,7 +537,7 @@ const MOMENTUM_LABEL = {
 function buyoutBadge(lvl) {
   if (!lvl || lvl === 'none') return '';
   const cls  = lvl === 'confirmed' ? 'badge-confirmed' : lvl === 'likely' ? 'badge-likely' : 'badge-watch';
-  const lbl  = lvl.charAt(0).toUpperCase() + lvl.slice(1);
+  const lbl  = {confirmed:'Confirmado', likely:'Probable', watch:'Vigilar'}[lvl] || lvl;
   return `<span class="buyout-pill ${cls}">${lbl}</span>`;
 }
 
