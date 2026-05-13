@@ -2,25 +2,25 @@
   "by_set": [
     {
       "set": "Spiritforged",
-      "value_eur": 121.63,
-      "pct": 37.2,
+      "value_eur": 122.4,
+      "pct": 40.8,
       "variants": 195
     },
     {
       "set": "Origins",
-      "value_eur": 120.04,
-      "pct": 36.7,
+      "value_eur": 121.8,
+      "pct": 40.6,
       "variants": 225
     },
     {
       "set": "Unleashed",
-      "value_eur": 83.93,
-      "pct": 25.7,
+      "value_eur": 54.52,
+      "pct": 18.2,
       "variants": 192
     },
     {
       "set": "Origins | Nexus Night",
-      "value_eur": 1.23,
+      "value_eur": 1.31,
       "pct": 0.4,
       "variants": 6
     }
@@ -28,32 +28,32 @@
   "by_rarity": [
     {
       "rarity": "Rare",
-      "value_eur": 79.86,
-      "pct": 24.4,
+      "value_eur": 73.51,
+      "pct": 24.5,
       "variants": 145
     },
     {
       "rarity": "Common",
-      "value_eur": 73.25,
-      "pct": 22.4,
+      "value_eur": 73.38,
+      "pct": 24.5,
       "variants": 245
     },
     {
       "rarity": "Uncommon",
-      "value_eur": 71.14,
-      "pct": 21.8,
+      "value_eur": 62.78,
+      "pct": 20.9,
       "variants": 205
     },
     {
       "rarity": "Showcase",
-      "value_eur": 60.58,
-      "pct": 18.5,
+      "value_eur": 54.44,
+      "pct": 18.1,
       "variants": 8
     },
     {
       "rarity": "Epic",
-      "value_eur": 42.0,
-      "pct": 12.9,
+      "value_eur": 35.92,
+      "pct": 12.0,
       "variants": 15
     }
   ]
