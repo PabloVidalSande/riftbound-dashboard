@@ -74,16 +74,20 @@
   {
     "date": "2026-05-14",
     "total_usd": 457.78,
-    "total_eur": 300.42
+    "total_eur": 326.83
   },
   {
     "date": "2026-05-15",
-    "total_usd": 439.75,
-    "total_eur": 298.49
+    "total_usd": 439.75
   },
   {
     "date": "2026-05-16",
     "total_usd": 427.77,
-    "total_eur": 298.88
+    "total_eur": 350.56
+  },
+  {
+    "date": "2026-05-17",
+    "total_usd": 428.27,
+    "total_eur": 296.7
   }
 ]
