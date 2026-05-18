@@ -1,42 +1,34 @@
 [
   {
-    "variant_number": "UNL-215-Foil",
-    "name": "Star Spring",
-    "set": "Unleashed",
-    "old_usd": 1.22,
-    "new_usd": 0.72,
-    "pct": -41.0
-  },
-  {
-    "variant_number": "OGN-183",
-    "name": "Stacked Deck",
-    "set": "Origins",
-    "old_usd": 4.97,
-    "new_usd": 6.56,
-    "pct": 32.0
-  },
-  {
     "variant_number": "UNL-179-Foil",
     "name": "Rift Herald",
     "set": "Unleashed",
-    "old_usd": 7.21,
-    "new_usd": 9.49,
-    "pct": 31.6
+    "old_usd": 9.49,
+    "new_usd": 19.0,
+    "pct": 100.2
+  },
+  {
+    "variant_number": "OGN-194-Foil",
+    "name": "Nocturne, Horrifying",
+    "set": "Origins",
+    "old_usd": 0.9,
+    "new_usd": 1.35,
+    "pct": 50.0
   },
   {
     "variant_number": "OGN-199-Foil",
     "name": "Tideturner",
     "set": "Origins",
-    "old_usd": 3.3,
-    "new_usd": 2.42,
-    "pct": -26.7
+    "old_usd": 2.42,
+    "new_usd": 3.46,
+    "pct": 43.0
   },
   {
-    "variant_number": "UNL-182-Foil",
-    "name": "Curtain Call",
+    "variant_number": "UNL-080-Foil",
+    "name": "Hwei, Brooding Painter",
     "set": "Unleashed",
-    "old_usd": 1.55,
-    "new_usd": 1.95,
-    "pct": 25.8
+    "old_usd": 1.42,
+    "new_usd": 1.87,
+    "pct": 31.7
   }
 ]
