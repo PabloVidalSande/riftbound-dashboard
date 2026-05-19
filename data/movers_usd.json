@@ -1,34 +1,26 @@
 [
   {
-    "variant_number": "UNL-179-Foil",
-    "name": "Rift Herald",
-    "set": "Unleashed",
-    "old_usd": 9.49,
-    "new_usd": 19.0,
-    "pct": 100.2
-  },
-  {
-    "variant_number": "OGN-194-Foil",
-    "name": "Nocturne, Horrifying",
-    "set": "Origins",
-    "old_usd": 0.9,
-    "new_usd": 1.35,
-    "pct": 50.0
+    "variant_number": "SFD-140-Foil",
+    "name": "Fizz, Trickster",
+    "set": "Spiritforged",
+    "old_usd": 2.44,
+    "new_usd": 4.4,
+    "pct": 80.3
   },
   {
     "variant_number": "OGN-199-Foil",
     "name": "Tideturner",
     "set": "Origins",
-    "old_usd": 2.42,
-    "new_usd": 3.46,
-    "pct": 43.0
+    "old_usd": 3.46,
+    "new_usd": 5.0,
+    "pct": 44.5
   },
   {
-    "variant_number": "UNL-080-Foil",
-    "name": "Hwei, Brooding Painter",
-    "set": "Unleashed",
-    "old_usd": 1.42,
-    "new_usd": 1.87,
-    "pct": 31.7
+    "variant_number": "SFD-051-Foil",
+    "name": "Guardian Angel",
+    "set": "Spiritforged",
+    "old_usd": 1.13,
+    "new_usd": 1.47,
+    "pct": 30.1
   }
 ]
