@@ -1,26 +1,10 @@
 [
   {
-    "variant_number": "SFD-140-Foil",
-    "name": "Fizz, Trickster",
-    "set": "Spiritforged",
-    "old_usd": 2.44,
-    "new_usd": 4.4,
-    "pct": 80.3
-  },
-  {
-    "variant_number": "OGN-199-Foil",
-    "name": "Tideturner",
-    "set": "Origins",
-    "old_usd": 3.46,
-    "new_usd": 5.0,
-    "pct": 44.5
-  },
-  {
-    "variant_number": "SFD-051-Foil",
-    "name": "Guardian Angel",
-    "set": "Spiritforged",
-    "old_usd": 1.13,
-    "new_usd": 1.47,
-    "pct": 30.1
+    "variant_number": "UNL-182-Foil",
+    "name": "Curtain Call",
+    "set": "Unleashed",
+    "old_usd": 1.54,
+    "new_usd": 1.05,
+    "pct": -31.8
   }
 ]
