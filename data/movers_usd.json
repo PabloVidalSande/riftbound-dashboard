@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "variant_number": "UNL-148-Foil",
+    "name": "Cursed Sarcophagus",
+    "set": "Unleashed",
+    "old_usd": 0.77,
+    "new_usd": 1.01,
+    "pct": 31.2
+  },
+  {
+    "variant_number": "UNL-080-Foil",
+    "name": "Hwei, Brooding Painter",
+    "set": "Unleashed",
+    "old_usd": 1.39,
+    "new_usd": 1.81,
+    "pct": 30.2
+  }
+]
