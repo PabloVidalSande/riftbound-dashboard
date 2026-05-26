@@ -1,18 +1,10 @@
 [
   {
-    "variant_number": "UNL-148-Foil",
-    "name": "Cursed Sarcophagus",
-    "set": "Unleashed",
-    "old_usd": 0.77,
-    "new_usd": 1.01,
-    "pct": 31.2
-  },
-  {
-    "variant_number": "UNL-080-Foil",
-    "name": "Hwei, Brooding Painter",
-    "set": "Unleashed",
-    "old_usd": 1.39,
-    "new_usd": 1.81,
-    "pct": 30.2
+    "variant_number": "OGN-284-Foil",
+    "name": "Obelisk of Power",
+    "set": "Origins",
+    "old_usd": 3.89,
+    "new_usd": 2.91,
+    "pct": -25.2
   }
 ]
