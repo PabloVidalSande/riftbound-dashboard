@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "variant_number": "UNL-176-Foil",
+    "name": "Vi, Peacekeeper",
+    "set": "Unleashed",
+    "old_usd": 0.62,
+    "new_usd": 1.17,
+    "pct": 88.7
+  },
+  {
+    "variant_number": "UNL-080-Foil",
+    "name": "Hwei, Brooding Painter",
+    "set": "Unleashed",
+    "old_usd": 1.74,
+    "new_usd": 2.62,
+    "pct": 50.6
+  }
+]
