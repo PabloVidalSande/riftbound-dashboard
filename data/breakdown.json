@@ -2,20 +2,20 @@
   "by_set": [
     {
       "set": "Origins",
-      "value_eur": 139.26,
-      "pct": 43.8,
+      "value_eur": 139.5,
+      "pct": 43.4,
       "variants": 225
     },
     {
       "set": "Spiritforged",
-      "value_eur": 126.55,
-      "pct": 39.8,
+      "value_eur": 128.75,
+      "pct": 40.0,
       "variants": 199
     },
     {
       "set": "Unleashed",
-      "value_eur": 48.75,
-      "pct": 15.3,
+      "value_eur": 50.05,
+      "pct": 15.6,
       "variants": 195
     },
     {
@@ -28,32 +28,32 @@
   "by_rarity": [
     {
       "rarity": "Rare",
-      "value_eur": 86.83,
-      "pct": 27.3,
+      "value_eur": 88.46,
+      "pct": 27.5,
       "variants": 147
     },
     {
       "rarity": "Common",
-      "value_eur": 83.26,
-      "pct": 26.2,
+      "value_eur": 83.41,
+      "pct": 25.9,
       "variants": 252
     },
     {
       "rarity": "Uncommon",
-      "value_eur": 70.81,
-      "pct": 22.3,
+      "value_eur": 70.98,
+      "pct": 22.1,
       "variants": 206
     },
     {
       "rarity": "Showcase",
-      "value_eur": 41.62,
-      "pct": 13.1,
+      "value_eur": 41.82,
+      "pct": 13.0,
       "variants": 8
     },
     {
       "rarity": "Epic",
-      "value_eur": 35.51,
-      "pct": 11.2,
+      "value_eur": 37.1,
+      "pct": 11.5,
       "variants": 15
     }
   ]

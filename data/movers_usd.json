@@ -3,16 +3,24 @@
     "variant_number": "UNL-176-Foil",
     "name": "Vi, Peacekeeper",
     "set": "Unleashed",
-    "old_usd": 0.62,
-    "new_usd": 1.17,
-    "pct": 88.7
+    "old_usd": 1.17,
+    "new_usd": 1.66,
+    "pct": 41.9
   },
   {
-    "variant_number": "UNL-080-Foil",
-    "name": "Hwei, Brooding Painter",
-    "set": "Unleashed",
-    "old_usd": 1.74,
-    "new_usd": 2.62,
-    "pct": 50.6
+    "variant_number": "SFD-080-Foil",
+    "name": "Bellows Breath",
+    "set": "Spiritforged",
+    "old_usd": 1.03,
+    "new_usd": 1.33,
+    "pct": 29.1
+  },
+  {
+    "variant_number": "SFD-045",
+    "name": "Not So Fast",
+    "set": "Spiritforged",
+    "old_usd": 2.37,
+    "new_usd": 2.98,
+    "pct": 25.7
   }
 ]
