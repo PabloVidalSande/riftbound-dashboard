@@ -3,16 +3,8 @@
     "variant_number": "UNL-176-Foil",
     "name": "Vi, Peacekeeper",
     "set": "Unleashed",
-    "old_usd": 1.95,
-    "new_usd": 2.81,
-    "pct": 44.1
-  },
-  {
-    "variant_number": "OGN-284-Foil",
-    "name": "Obelisk of Power",
-    "set": "Origins",
-    "old_usd": 1.16,
-    "new_usd": 1.47,
-    "pct": 26.7
+    "old_usd": 2.81,
+    "new_usd": 1.93,
+    "pct": -31.3
   }
 ]
