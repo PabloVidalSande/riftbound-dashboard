@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#0b0d10">
 <title>Riftbound Tracker</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctext y='20' font-size='20'%3E%F0%9F%92%8E%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
 :root {
@@ -135,6 +137,23 @@ tr:hover td{background:var(--bg3)}
 .pg-btn:not(:disabled):hover{border-color:var(--cyan);color:var(--cyan)}
 .pg-info{color:var(--muted);min-width:90px;text-align:center}
 
+/* ── FILTER SELECTS ── */
+.filter-select{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;padding:6px 8px;outline:none}
+.filter-select:focus{border-color:var(--cyan)}
+.toolbar-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* ── CARD MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);max-width:560px;width:100%;padding:18px 20px;position:relative}
+.modal-close{position:absolute;top:10px;right:12px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1}
+.modal-close:hover{color:var(--text)}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:2px;padding-right:28px}
+.modal-sub{font-size:12px;color:var(--muted);margin-bottom:10px}
+.modal-stats{display:flex;gap:18px;font-size:13px;margin-bottom:12px;flex-wrap:wrap}
+.modal-chart-wrap{height:200px;position:relative}
+tbody tr{cursor:pointer}
+
 /* ── FOOTER ── */
 footer{margin-top:32px;text-align:center;font-size:11px;color:var(--muted);line-height:1.8}
 
@@ -180,6 +199,8 @@ footer{margin-top:32px;text-align:center;font-size:11px;color:var(--muted);line-
     <div class="tabs">
       <button class="tab-btn active" data-tab="usd">Movers USD</button>
       <button class="tab-btn"        data-tab="eur">Alertas EUR</button>
+      <button class="tab-btn"        data-tab="7d">Top 7d</button>
+      <button class="tab-btn"        data-tab="30d">Top 30d</button>
     </div>
     <div id="tab-usd" class="tab-panel active">
       <div class="movers-grid">
@@ -191,6 +212,18 @@ footer{margin-top:32px;text-align:center;font-size:11px;color:var(--muted);line-
       <div class="movers-grid">
         <div class="movers-box"><div class="m-title" style="color:var(--green)">▲ Subidas EUR</div><div id="ups-eur"></div></div>
         <div class="movers-box"><div class="m-title" style="color:var(--red)">▼ Bajadas EUR</div><div id="dns-eur"></div></div>
+      </div>
+    </div>
+    <div id="tab-7d" class="tab-panel">
+      <div class="movers-grid">
+        <div class="movers-box"><div class="m-title" style="color:var(--green)">▲ Top subidas 7d (EUR)</div><div id="ups-7d"></div></div>
+        <div class="movers-box"><div class="m-title" style="color:var(--red)">▼ Top bajadas 7d (EUR)</div><div id="dns-7d"></div></div>
+      </div>
+    </div>
+    <div id="tab-30d" class="tab-panel">
+      <div class="movers-grid">
+        <div class="movers-box"><div class="m-title" style="color:var(--green)">▲ Top subidas 30d (EUR)</div><div id="ups-30d"></div></div>
+        <div class="movers-box"><div class="m-title" style="color:var(--red)">▼ Top bajadas 30d (EUR)</div><div id="dns-30d"></div></div>
       </div>
     </div>
   </div>
@@ -214,7 +247,11 @@ footer{margin-top:32px;text-align:center;font-size:11px;color:var(--muted);line-
   <div class="sec" id="sec-cards" style="display:none">
     <div class="table-toolbar">
       <div class="sec-title" style="margin-bottom:0">Cartas de la colección</div>
-      <input id="card-search" class="search-input" type="text" placeholder="Buscar carta o variante…">
+      <div class="toolbar-controls">
+        <select id="filter-set" class="filter-select"><option value="">Todos los sets</option></select>
+        <select id="filter-rarity" class="filter-select"><option value="">Todas las rarezas</option></select>
+        <input id="card-search" class="search-input" type="text" placeholder="Buscar carta o variante…">
+      </div>
     </div>
     <div class="table-wrap">
       <table>
@@ -225,6 +262,7 @@ footer{margin-top:32px;text-align:center;font-size:11px;color:var(--muted);line-
             <th data-col="set">Set</th>
             <th data-col="rarity">Rareza</th>
             <th data-col="eur_price" class="sort-desc">EUR €</th>
+            <th title="Precio EUR últimos 30 días" style="cursor:default">30d</th>
             <th data-col="usd_price">USD $</th>
             <th data-col="pct_7d">7d %</th>
             <th data-col="momentum">Momentum</th>
@@ -247,6 +285,17 @@ footer{margin-top:32px;text-align:center;font-size:11px;color:var(--muted);line-
 
 </div><!-- .wrap -->
 
+<!-- ── MODAL DETALLE CARTA ── -->
+<div class="modal-overlay" id="card-modal">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close" aria-label="Cerrar">×</button>
+    <div class="modal-title" id="modal-title">—</div>
+    <div class="modal-sub" id="modal-sub">—</div>
+    <div class="modal-stats" id="modal-stats"></div>
+    <div class="modal-chart-wrap"><canvas id="modal-chart"></canvas></div>
+  </div>
+</div>
+
 <script>
 'use strict';
 
@@ -267,11 +316,16 @@ function cls(el, ...names) { names.forEach(n => n && el.classList.add(n)); }
 /* ─── KPI hero ───────────────────────────────────────────────────────────── */
 function renderHero(snaps, moversUsd, moversEur, buyouts) {
   const last = snaps[snaps.length - 1];
-  const prev = snaps.length >= 2 ? snaps[snaps.length - 2] : null;
+  // Las series USD y EUR pueden no compartir todas las fechas: usar el último
+  // snapshot que tenga cada valor.
+  const snapsUsd = snaps.filter(s => s.total_usd != null);
+  const lastUsd  = snapsUsd[snapsUsd.length - 1] || null;
+  const prevUsd  = snapsUsd.length >= 2 ? snapsUsd[snapsUsd.length - 2] : null;
 
   // USD
-  $('kpi-usd').textContent = fmtUsd(last.total_usd);
-  const ageMs  = last.date ? Date.now() - new Date(last.date).getTime() : 0;
+  $('kpi-usd').textContent = fmtUsd(lastUsd ? lastUsd.total_usd : null);
+  const usdDate = lastUsd ? lastUsd.date : last.date;
+  const ageMs  = usdDate ? Date.now() - new Date(usdDate).getTime() : 0;
   const ageDays= Math.floor(ageMs / 86400000);
   if (ageDays >= 2) {
     document.querySelector('#kpi-usd').closest('.kpi').classList.add('stale');
@@ -279,18 +333,19 @@ function renderHero(snaps, moversUsd, moversEur, buyouts) {
   }
 
   // USD delta
-  if (prev && prev.total_usd) {
-    const d   = last.total_usd - prev.total_usd;
-    const pct = d / prev.total_usd * 100;
-    $('kpi-delta').textContent = (d >= 0 ? '+' : '') + fmtUsd(Math.abs(d)).replace('$', d < 0 ? '-$' : '+$');
+  if (lastUsd && prevUsd && prevUsd.total_usd) {
+    const d   = lastUsd.total_usd - prevUsd.total_usd;
+    const pct = d / prevUsd.total_usd * 100;
     $('kpi-delta').textContent = (d >= 0 ? '+$' : '-$') + Math.abs(d).toLocaleString('es-ES', {minimumFractionDigits:2,maximumFractionDigits:2});
     $('kpi-delta').className   = 'val ' + (d > 0 ? 'up' : d < 0 ? 'dn' : 'flat');
     $('kpi-delta-pct').textContent = fmtPct(pct);
   }
 
   // EUR
-  if (last.total_eur != null) {
-    $('kpi-eur').textContent = fmtEur(last.total_eur);
+  const snapsEurAll = snaps.filter(s => s.total_eur != null);
+  const lastEur = snapsEurAll[snapsEurAll.length - 1] || null;
+  if (lastEur) {
+    $('kpi-eur').textContent = fmtEur(lastEur.total_eur);
     $('kpi-eur').style.color = 'var(--amber)';
   }
 
@@ -476,6 +531,32 @@ function renderMovers(moversUsd, moversEur) {
   $('dns-eur').innerHTML = dns_e.length ? dns_e.map(moverRowEur).join('') : '<div class="empty">Sin alertas EUR de bajada.</div>';
 }
 
+/* ─── Top trends 7d / 30d (EUR, desde cards.json) ────────────────────────── */
+function trendRow(c, pct) {
+  const clr  = pct >= 0 ? 'up' : 'dn';
+  const link = c.url ? `<a href="${c.url}" target="_blank" rel="noopener" style="font-size:11px">↗</a>` : '';
+  return `<div class="mover-row">
+    <div class="m-card">
+      <div class="m-name" title="${c.name}">${c.name || c.variant} ${link}</div>
+      <div class="m-vn">${c.variant}</div>
+    </div>
+    <div class="m-price">${fmtEur(c.eur_price)}</div>
+    <div class="m-pct ${clr}">${fmtPct(pct)}</div>
+  </div>`;
+}
+
+function renderTopTrends(cards) {
+  // Solo cartas con precio relevante (≥1 €) para evitar ruido de céntimos
+  const eligible = cards.filter(c => (c.eur_price || 0) >= 1);
+  for (const [key, ids] of [['eur_pct_7d', ['ups-7d', 'dns-7d']], ['eur_pct_30d', ['ups-30d', 'dns-30d']]]) {
+    const withPct = eligible.filter(c => c[key] != null && c[key] !== 0);
+    const ups = withPct.filter(c => c[key] > 0).sort((a, b) => b[key] - a[key]).slice(0, 10);
+    const dns = withPct.filter(c => c[key] < 0).sort((a, b) => a[key] - b[key]).slice(0, 10);
+    $(ids[0]).innerHTML = ups.length ? ups.map(c => trendRow(c, c[key])).join('') : '<div class="empty">Sin subidas en el periodo.</div>';
+    $(ids[1]).innerHTML = dns.length ? dns.map(c => trendRow(c, c[key])).join('') : '<div class="empty">Sin bajadas en el periodo.</div>';
+  }
+}
+
 /* ─── Tabs ───────────────────────────────────────────────────────────────── */
 function initTabs() {
   document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -580,6 +661,22 @@ const MOMENTUM_LABEL = {
   'Strong Downward': '↓↓ Fuerte bajada',
 };
 
+/* Sparkline SVG inline: serie de precios EUR de los últimos 30 días */
+function sparkline(prices) {
+  if (!Array.isArray(prices) || prices.length < 2) return '<span class="flat">—</span>';
+  const w = 64, h = 20, n = prices.length;
+  const min = Math.min(...prices), max = Math.max(...prices);
+  const range = (max - min) || 1;
+  const pts = prices.map((p, i) =>
+    `${(i / (n - 1) * w).toFixed(1)},${(h - 2 - (p - min) / range * (h - 4)).toFixed(1)}`
+  ).join(' ');
+  const first = prices[0], last = prices[n - 1];
+  const color = last > first ? 'var(--green)' : last < first ? 'var(--red)' : 'var(--muted)';
+  const delta = first ? ((last - first) / first * 100) : 0;
+  const title = `${fmtEur(first)} → ${fmtEur(last)} (${fmtPct(delta)}) · ${n} días`;
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="display:block"><title>${title}</title><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
+}
+
 function buyoutBadge(lvl) {
   if (!lvl || lvl === 'none') return '';
   const cls  = lvl === 'confirmed' ? 'badge-confirmed' : lvl === 'likely' ? 'badge-likely' : 'badge-watch';
@@ -596,12 +693,13 @@ function renderTable() {
     const mLabel = c.momentum ? MOMENTUM_LABEL[c.momentum] || c.momentum : '—';
     const link   = c.url ? ` <a href="${c.url}" target="_blank" rel="noopener" style="font-size:10px;color:var(--muted)">↗</a>` : '';
     const p7cls  = c.pct_7d > 0 ? 'up' : c.pct_7d < 0 ? 'dn' : 'flat';
-    return `<tr>
+    return `<tr data-variant="${c.variant}">
       <td class="t-vn">${c.variant}</td>
       <td class="t-name">${c.name}${link}</td>
       <td style="color:var(--muted)">${c.set || '—'}</td>
       <td style="color:var(--muted)">${c.rarity || '—'}</td>
       <td style="color:var(--amber)">${c.eur_price != null ? fmtEur(c.eur_price) : '—'}</td>
+      <td>${sparkline(c.spark)}</td>
       <td style="color:var(--cyan)">${c.usd_price  != null ? fmtUsd(c.usd_price) : '—'}</td>
       <td class="${p7cls}">${c.pct_7d != null ? fmtPct(c.pct_7d) : '—'}</td>
       <td>${c.momentum ? `<span class="momentum-cell ${mClass}">${mLabel}</span>` : '—'}</td>
@@ -637,18 +735,92 @@ function sortCards() {
 }
 
 function applyFilter() {
-  const q = $('card-search').value.trim().toLowerCase();
-  filteredCards = q
-    ? allCards.filter(c =>
-        (c.name    || '').toLowerCase().includes(q) ||
-        (c.variant || '').toLowerCase().includes(q) ||
-        (c.set     || '').toLowerCase().includes(q) ||
-        (c.rarity  || '').toLowerCase().includes(q)
-      )
-    : [...allCards];
+  const q    = $('card-search').value.trim().toLowerCase();
+  const fSet = $('filter-set').value;
+  const fRar = $('filter-rarity').value;
+  filteredCards = allCards.filter(c => {
+    if (fSet && c.set !== fSet) return false;
+    if (fRar && c.rarity !== fRar) return false;
+    if (!q) return true;
+    return (c.name    || '').toLowerCase().includes(q) ||
+           (c.variant || '').toLowerCase().includes(q) ||
+           (c.set     || '').toLowerCase().includes(q) ||
+           (c.rarity  || '').toLowerCase().includes(q);
+  });
   sortCards();
   page = 0;
   renderTable();
+}
+
+function populateFilters(cards) {
+  const sets     = [...new Set(cards.map(c => c.set).filter(Boolean))].sort();
+  const rarities = [...new Set(cards.map(c => c.rarity).filter(Boolean))].sort();
+  $('filter-set').innerHTML    = '<option value="">Todos los sets</option>' +
+    sets.map(s => `<option value="${s}">${s}</option>`).join('');
+  $('filter-rarity').innerHTML = '<option value="">Todas las rarezas</option>' +
+    rarities.map(r => `<option value="${r}">${r}</option>`).join('');
+}
+
+/* ─── Modal de detalle por carta ─────────────────────────────────────────── */
+let modalChart = null;
+
+function openCardModal(c) {
+  $('modal-title').textContent = c.name || c.variant;
+  $('modal-sub').textContent   = `${c.variant} · ${c.set || '—'} · ${c.rarity || '—'}` +
+                                 (c.variant_label ? ` · ${c.variant_label}` : '');
+  const spark = Array.isArray(c.spark) ? c.spark : [];
+  let deltaHtml = '';
+  if (spark.length >= 2) {
+    const d = spark[spark.length - 1] - spark[0];
+    const pct = spark[0] ? d / spark[0] * 100 : 0;
+    deltaHtml = `<span class="${d > 0 ? 'up' : d < 0 ? 'dn' : 'flat'}">30d: ${fmtPct(pct)}</span>`;
+  }
+  $('modal-stats').innerHTML = [
+    `<span style="color:var(--amber)">EUR ${fmtEur(c.eur_price)}</span>`,
+    `<span style="color:var(--cyan)">USD ${fmtUsd(c.usd_price)}</span>`,
+    deltaHtml,
+    c.url ? `<a href="${c.url}" target="_blank" rel="noopener">Cardmarket ↗</a>` : '',
+  ].filter(Boolean).join('');
+
+  if (modalChart) { modalChart.destroy(); modalChart = null; }
+  if (spark.length >= 2) {
+    const n = spark.length;
+    modalChart = new Chart($('modal-chart'), {
+      type: 'line',
+      data: {
+        labels: spark.map((_, i) => i === n - 1 ? 'hoy' : `${i - n + 1}d`),
+        datasets: [{
+          data: spark,
+          borderColor: '#fbbf24',
+          backgroundColor: 'rgba(251,191,36,0.08)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.3,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ' ' + fmtEur(ctx.parsed.y) } },
+        },
+        scales: {
+          x: { ticks: { color: '#98a2b3', maxTicksLimit: 6 }, grid: { color: '#1c2026' } },
+          y: { ticks: { color: '#fbbf24', callback: v => '€' + v }, grid: { color: '#1c2026' } },
+        }
+      }
+    });
+  }
+  $('card-modal').classList.add('open');
+}
+
+function closeCardModal() {
+  $('card-modal').classList.remove('open');
+  if (modalChart) { modalChart.destroy(); modalChart = null; }
 }
 
 function renderCards(cards) {
@@ -676,7 +848,23 @@ function renderCards(cards) {
     });
   });
 
+  populateFilters(cards);
   $('card-search').addEventListener('input', applyFilter);
+  $('filter-set').addEventListener('change', applyFilter);
+  $('filter-rarity').addEventListener('change', applyFilter);
+
+  // Click en fila → modal de detalle (los enlaces ↗ siguen funcionando normal)
+  $('cards-tbody').addEventListener('click', e => {
+    if (e.target.closest('a')) return;
+    const tr = e.target.closest('tr[data-variant]');
+    if (!tr) return;
+    const c = allCards.find(x => x.variant === tr.dataset.variant);
+    if (c) openCardModal(c);
+  });
+  $('modal-close').addEventListener('click', closeCardModal);
+  $('card-modal').addEventListener('click', e => { if (e.target === $('card-modal')) closeCardModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCardModal(); });
+
   applyFilter();
 }
 
@@ -704,6 +892,7 @@ initTabs();
     renderHistory(snaps);
     renderBuyouts(buyouts);
     renderMovers(moversUsd, moversEur);
+    renderTopTrends(cards);
     renderBreakdown(breakdown);
     renderCards(cards);
 
@@ -712,6 +901,11 @@ initTabs();
       `<p style="color:var(--red);padding:60px 0;text-align:center">Error cargando datos: ${e.message}</p>`;
   }
 })();
+
+/* ─── PWA: service worker (offline + carga instantánea) ──────────────────── */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
 </script>
 </body>
 </html>
