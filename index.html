@@ -4,10 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b0d10">
-<title>Riftbound Tracker</title>
+<title>Riftbound Tracker — precios de la colección</title>
+<meta name="description" content="Dashboard del valor de la colección Riftbound: precios EUR (Cardmarket) y USD (TCGplayer), histórico, movers, señales de buyout y tendencias.">
+<link rel="canonical" href="https://pablovidalsande.github.io/riftbound-dashboard/">
+<!-- Open Graph / redes sociales -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Riftbound Tracker">
+<meta property="og:title" content="Riftbound Tracker — precios de la colección">
+<meta property="og:description" content="Valor de la colección Riftbound en EUR y USD, con histórico, movers y señales de mercado. Actualizado a diario.">
+<meta property="og:url" content="https://pablovidalsande.github.io/riftbound-dashboard/">
+<meta property="og:image" content="https://pablovidalsande.github.io/riftbound-dashboard/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Riftbound Tracker — precios de la colección">
+<meta name="twitter:description" content="Valor de la colección Riftbound en EUR y USD, con histórico, movers y señales de mercado.">
+<meta name="twitter:image" content="https://pablovidalsande.github.io/riftbound-dashboard/og.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctext y='20' font-size='20'%3E%F0%9F%92%8E%3C/text%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon-180.png">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
 :root {
@@ -32,7 +47,10 @@
 html,body{background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:var(--cyan);text-decoration:none}
 a:hover{text-decoration:underline}
-.wrap{max-width:1040px;margin:0 auto;padding:16px 14px 60px}
+.wrap{max-width:1040px;margin:0 auto;padding:16px 14px 60px;padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right));padding-bottom:max(60px,env(safe-area-inset-bottom))}
+/* Foco visible para navegación por teclado */
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:4px}
+a:focus-visible,button:focus-visible,[tabindex]:focus-visible,th:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 
 /* ── HEADER ── */
 header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap}
@@ -157,11 +175,48 @@ tbody tr{cursor:pointer}
 /* ── FOOTER ── */
 footer{margin-top:32px;text-align:center;font-size:11px;color:var(--muted);line-height:1.8}
 
+/* ── TREEMAP ── */
+.treemap-wrap{position:relative;width:100%;height:300px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.tm-tile{position:absolute;overflow:hidden;border:1px solid rgba(11,13,16,.65);cursor:pointer;transition:filter .12s}
+.tm-tile:hover,.tm-tile:focus-visible{filter:brightness(1.18);z-index:2;outline:none}
+.tm-tile .tm-label{position:absolute;top:4px;left:6px;right:4px;font-size:11px;font-weight:600;color:#0b0d10;line-height:1.15;pointer-events:none}
+.tm-tile .tm-val{position:absolute;bottom:4px;left:6px;font-size:10px;color:rgba(11,13,16,.8);pointer-events:none}
+.viz-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:8px;align-items:center}
+.viz-legend .sw{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+
+/* ── HEATMAP ── */
+.heatmap-wrap{overflow-x:auto;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px}
+table.heatmap{border-collapse:collapse;font-size:12px;width:100%}
+table.heatmap th,table.heatmap td{padding:7px 9px;text-align:center;white-space:nowrap}
+table.heatmap thead th{color:var(--muted);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.04em}
+table.heatmap tbody th{text-align:right;color:var(--text);font-weight:600;font-size:11px}
+table.heatmap td.cell{border-radius:5px;font-weight:600;color:#0b0d10;cursor:default}
+table.heatmap td.empty{color:var(--border)}
+
+/* ── COMPARADOR ── */
+.cmp-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.cmp-chips{display:flex;gap:6px;flex-wrap:wrap}
+.cmp-chip{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:3px 6px 3px 10px;font-size:12px}
+.cmp-chip button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;line-height:1;padding:0 2px}
+.cmp-chip button:hover{color:var(--red)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.seg button{background:var(--bg2);border:none;color:var(--muted);font-size:12px;padding:5px 10px;cursor:pointer}
+.seg button.active{background:var(--bg3);color:var(--cyan)}
+
 /* ── MISC ── */
 .movers-tab-sec{margin-bottom:24px}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
 </style>
 </head>
 <body>
+<noscript>
+  <div style="max-width:680px;margin:40px auto;padding:20px;background:#15181d;border:1px solid #2a2f37;border-radius:10px;text-align:center;color:#e6e9ee;font-family:system-ui,Arial,sans-serif">
+    <h1 style="font-size:18px;margin-bottom:8px">💎 Riftbound Tracker</h1>
+    <p style="color:#98a2b3;font-size:14px">Este panel necesita JavaScript para mostrar los gráficos y las tablas de precios. Actívalo y recarga la página.</p>
+  </div>
+</noscript>
 <div class="wrap">
 
   <header>
@@ -243,6 +298,49 @@ footer{margin-top:32px;text-align:center;font-size:11px;color:var(--muted);line-
     </div>
   </div>
 
+  <!-- ── TREEMAP ── -->
+  <div class="sec" id="sec-treemap" style="display:none">
+    <div class="sec-title">Mapa de cartas — tamaño = precio unitario · color = variación 30d</div>
+    <div class="treemap-wrap" id="treemap"></div>
+    <div class="viz-legend">
+      <span><span class="sw" style="background:#f87171"></span>baja fuerte</span>
+      <span><span class="sw" style="background:#3a1a1a"></span>baja</span>
+      <span><span class="sw" style="background:#2a2f37"></span>estable</span>
+      <span><span class="sw" style="background:#1a3a25"></span>sube</span>
+      <span><span class="sw" style="background:#4ade80"></span>sube fuerte</span>
+      <span style="margin-left:auto">Top 60 cartas por precio · toca una para ver detalle</span>
+    </div>
+  </div>
+
+  <!-- ── HEATMAP ── -->
+  <div class="sec" id="sec-heatmap" style="display:none">
+    <div class="table-toolbar">
+      <div class="sec-title" style="margin-bottom:0">Heatmap de variación por set y rareza</div>
+      <div class="seg" id="heatmap-period" role="group" aria-label="Periodo del heatmap">
+        <button data-p="eur_pct_7d" class="active">7d</button>
+        <button data-p="eur_pct_30d">30d</button>
+      </div>
+    </div>
+    <div class="heatmap-wrap"><div id="heatmap"></div></div>
+    <div class="viz-legend"><span>Color = variación media EUR · número = nº de cartas · celda vacía = sin datos</span></div>
+  </div>
+
+  <!-- ── COMPARADOR ── -->
+  <div class="sec" id="sec-compare" style="display:none">
+    <div class="sec-title">Comparador de cartas — evolución de precio (30 días)</div>
+    <div class="cmp-controls">
+      <input id="cmp-search" class="search-input" type="text" list="cmp-list" placeholder="Añade una carta (nombre o variante)…">
+      <datalist id="cmp-list"></datalist>
+      <div class="seg" id="cmp-mode" role="group" aria-label="Modo del comparador">
+        <button data-m="abs" class="active">€ absoluto</button>
+        <button data-m="idx">Índice 100</button>
+      </div>
+    </div>
+    <div class="cmp-chips" id="cmp-chips" style="margin-bottom:10px"></div>
+    <div class="chart-box" style="height:240px;position:relative;margin-bottom:0"><canvas id="cmp-chart"></canvas></div>
+    <div class="viz-legend"><span id="cmp-hint">Añade hasta 4 cartas para comparar su evolución. "Índice 100" normaliza para comparar tendencias.</span></div>
+  </div>
+
   <!-- ── TABLA DE CARTAS ── -->
   <div class="sec" id="sec-cards" style="display:none">
     <div class="table-toolbar">
@@ -257,16 +355,16 @@ footer{margin-top:32px;text-align:center;font-size:11px;color:var(--muted);line-
       <table>
         <thead>
           <tr>
-            <th data-col="variant">Variante</th>
-            <th data-col="name">Carta</th>
-            <th data-col="set">Set</th>
-            <th data-col="rarity">Rareza</th>
-            <th data-col="eur_price" class="sort-desc">EUR €</th>
+            <th data-col="variant" tabindex="0" role="button" aria-label="Ordenar por variante">Variante</th>
+            <th data-col="name" tabindex="0" role="button" aria-label="Ordenar por carta">Carta</th>
+            <th data-col="set" tabindex="0" role="button" aria-label="Ordenar por set">Set</th>
+            <th data-col="rarity" tabindex="0" role="button" aria-label="Ordenar por rareza">Rareza</th>
+            <th data-col="eur_price" tabindex="0" role="button" aria-label="Ordenar por precio EUR" class="sort-desc" aria-sort="descending">EUR €</th>
             <th title="Precio EUR últimos 30 días" style="cursor:default">30d</th>
-            <th data-col="usd_price">USD $</th>
-            <th data-col="pct_7d">7d %</th>
-            <th data-col="momentum">Momentum</th>
-            <th data-col="buyout_level">Buyout</th>
+            <th data-col="usd_price" tabindex="0" role="button" aria-label="Ordenar por precio USD">USD $</th>
+            <th data-col="pct_7d" tabindex="0" role="button" aria-label="Ordenar por variación 7 días">7d %</th>
+            <th data-col="momentum" tabindex="0" role="button" aria-label="Ordenar por momentum">Momentum</th>
+            <th data-col="buyout_level" tabindex="0" role="button" aria-label="Ordenar por buyout">Buyout</th>
           </tr>
         </thead>
         <tbody id="cards-tbody"></tbody>
@@ -287,7 +385,7 @@ footer{margin-top:32px;text-align:center;font-size:11px;color:var(--muted);line-
 
 <!-- ── MODAL DETALLE CARTA ── -->
 <div class="modal-overlay" id="card-modal">
-  <div class="modal-box">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <button class="modal-close" id="modal-close" aria-label="Cerrar">×</button>
     <div class="modal-title" id="modal-title">—</div>
     <div class="modal-sub" id="modal-sub">—</div>
@@ -305,8 +403,19 @@ const fmtUsd = n => n == null ? '—' : '$' + Number(n).toLocaleString('es-ES', 
 const fmtEur = n => n == null ? '—' : Number(n).toLocaleString('es-ES', {minimumFractionDigits:2,maximumFractionDigits:2}) + ' €';
 const fmtPct = n => n == null ? '—' : (n >= 0 ? '+' : '') + Number(n).toFixed(1) + '%';
 
+// Escapa texto antes de interpolarlo en innerHTML / atributos (los nombres de
+// carta pueden traer comillas o símbolos: p.ej. "Kai'Sa").
+const ESC = { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' };
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ESC[c]);
+
+const REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (typeof Chart !== 'undefined' && REDUCED_MOTION) Chart.defaults.animation = false;
+
+// Cache-busting por DÍA (no por petición): online se revalida a diario y las
+// revisitas dentro del mismo día sirven de caché del navegador / service worker.
+const DAY_KEY = Math.floor(Date.now() / 86400000);
 async function loadJson(path) {
-  const r = await fetch(path + '?t=' + Date.now());
+  const r = await fetch(path + '?d=' + DAY_KEY);
   if (!r.ok) throw new Error(path + ' → ' + r.status);
   return r.json();
 }
@@ -377,10 +486,42 @@ function renderHero(snaps, moversUsd, moversEur, buyouts) {
   $('updated').textContent = 'Snapshot ' + (last.date || '—');
 }
 
+/* ─── Eventos (salida de sets) marcados en el histórico ──────────────────── */
+const EVENTS = [
+  // Fechas APROXIMADAS de salida de sets — ajusta o añade aquí.
+  // Solo se dibujan las que caen dentro del rango del gráfico.
+  { date: '2026-05-12', label: 'Unleashed' },
+];
+const eventLinePlugin = {
+  id: 'eventLines',
+  afterDatasetsDraw(chart) {
+    const cfg = chart.options.plugins.eventLines;
+    if (!cfg || !cfg.events || !cfg.events.length) return;
+    const { ctx, chartArea: { top, bottom }, scales: { x } } = chart;
+    const labels = chart.data.labels;
+    cfg.events.forEach(ev => {
+      const idx = labels.findIndex(d => d >= ev.date);
+      if (idx < 0) return;
+      const px = x.getPixelForValue(idx);
+      if (px == null || isNaN(px)) return;
+      ctx.save();
+      ctx.strokeStyle = 'rgba(192,132,252,.65)';
+      ctx.setLineDash([4, 3]); ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bottom); ctx.stroke();
+      ctx.setLineDash([]); ctx.fillStyle = '#c084fc';
+      ctx.font = '10px -apple-system,sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText(ev.label, px + 3, top + 10);
+      ctx.restore();
+    });
+  }
+};
+
 /* ─── Historical chart ───────────────────────────────────────────────────── */
 function renderHistory(snaps) {
   const ctx = $('chart-history');
   const hasEur = snaps.some(s => s.total_eur != null);
+  const first = snaps[0].date, lastD = snaps[snaps.length - 1].date;
+  const evs = EVENTS.filter(e => e.date >= first && e.date <= lastD);
   const pr = snaps.length > 30 ? 0 : 3;
   const datasets = [
     {
@@ -414,11 +555,13 @@ function renderHistory(snaps) {
   new Chart(ctx, {
     type: 'line',
     data: { labels: snaps.map(s => s.date), datasets },
+    plugins: [eventLinePlugin],
     options: {
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
+        eventLines: { events: evs },
         legend: { display: hasEur, labels: { color: '#98a2b3', boxWidth: 12, font: { size: 11 } } },
         tooltip: {
           callbacks: {
@@ -475,12 +618,12 @@ function renderBuyouts(buyouts) {
     const clr7 = b.usd_pct_7d > 0 ? 'up' : b.usd_pct_7d < 0 ? 'dn' : '';
     const eur  = b.eur_price  != null ? fmtEur(b.eur_price)  : '—';
     const usd  = b.usd_price  != null ? fmtUsd(b.usd_price)  : '—';
-    const link = b.url ? `<a href="${b.url}" target="_blank" rel="noopener">↗</a>` : '';
+    const link = b.url ? `<a href="${esc(b.url)}" target="_blank" rel="noopener">↗</a>` : '';
     return `<div class="signal-card">
       <div class="s-head">
         <div>
-          <div class="s-name">${b.name || b.variant} ${link}</div>
-          <div class="s-vn">${b.variant} · ${b.set} · ${b.rarity}</div>
+          <div class="s-name">${esc(b.name || b.variant)} ${link}</div>
+          <div class="s-vn">${esc(b.variant)} · ${esc(b.set)} · ${esc(b.rarity)}</div>
         </div>
         <span class="badge ${badgeClass(b)}">${badgeLabel(b)}</span>
       </div>
@@ -495,12 +638,12 @@ function renderBuyouts(buyouts) {
 
 /* ─── Movers ─────────────────────────────────────────────────────────────── */
 function moverRowUsd(m) {
-  const name  = m.name || m.variant_number;
+  const name  = esc(m.name || m.variant_number);
   const clr   = m.pct >= 0 ? 'up' : 'dn';
   return `<div class="mover-row">
     <div class="m-card">
-      <div class="m-name" title="${m.name}">${name}</div>
-      <div class="m-vn">${m.variant_number}</div>
+      <div class="m-name" title="${esc(m.name)}">${name}</div>
+      <div class="m-vn">${esc(m.variant_number)}</div>
     </div>
     <div class="m-price">${fmtUsd(m.old_usd)} → ${fmtUsd(m.new_usd)}</div>
     <div class="m-pct ${clr}">${fmtPct(m.pct)}</div>
@@ -508,11 +651,11 @@ function moverRowUsd(m) {
 }
 function moverRowEur(m) {
   const clr = m.delta_pct >= 0 ? 'up' : 'dn';
-  const link = m.url ? `<a href="${m.url}" target="_blank" rel="noopener" style="font-size:11px">↗</a>` : '';
+  const link = m.url ? `<a href="${esc(m.url)}" target="_blank" rel="noopener" style="font-size:11px">↗</a>` : '';
   return `<div class="mover-row">
     <div class="m-card">
-      <div class="m-name" title="${m.name}">${m.name || m.variant} ${link}</div>
-      <div class="m-vn">${m.variant}</div>
+      <div class="m-name" title="${esc(m.name)}">${esc(m.name || m.variant)} ${link}</div>
+      <div class="m-vn">${esc(m.variant)}</div>
     </div>
     <div class="m-price">${fmtEur(m.prev_price)} → ${fmtEur(m.new_price)}</div>
     <div class="m-pct ${clr}">${fmtPct(m.delta_pct)}</div>
@@ -534,11 +677,11 @@ function renderMovers(moversUsd, moversEur) {
 /* ─── Top trends 7d / 30d (EUR, desde cards.json) ────────────────────────── */
 function trendRow(c, pct) {
   const clr  = pct >= 0 ? 'up' : 'dn';
-  const link = c.url ? `<a href="${c.url}" target="_blank" rel="noopener" style="font-size:11px">↗</a>` : '';
+  const link = c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener" style="font-size:11px">↗</a>` : '';
   return `<div class="mover-row">
     <div class="m-card">
-      <div class="m-name" title="${c.name}">${c.name || c.variant} ${link}</div>
-      <div class="m-vn">${c.variant}</div>
+      <div class="m-name" title="${esc(c.name)}">${esc(c.name || c.variant)} ${link}</div>
+      <div class="m-vn">${esc(c.variant)}</div>
     </div>
     <div class="m-price">${fmtEur(c.eur_price)}</div>
     <div class="m-pct ${clr}">${fmtPct(pct)}</div>
@@ -691,13 +834,13 @@ function renderTable() {
   tbody.innerHTML = slice.map(c => {
     const mClass = c.momentum ? MOMENTUM_CLASS[c.momentum] || 'mom-s' : '';
     const mLabel = c.momentum ? MOMENTUM_LABEL[c.momentum] || c.momentum : '—';
-    const link   = c.url ? ` <a href="${c.url}" target="_blank" rel="noopener" style="font-size:10px;color:var(--muted)">↗</a>` : '';
+    const link   = c.url ? ` <a href="${esc(c.url)}" target="_blank" rel="noopener" style="font-size:10px;color:var(--muted)">↗</a>` : '';
     const p7cls  = c.pct_7d > 0 ? 'up' : c.pct_7d < 0 ? 'dn' : 'flat';
-    return `<tr data-variant="${c.variant}">
-      <td class="t-vn">${c.variant}</td>
-      <td class="t-name">${c.name}${link}</td>
-      <td style="color:var(--muted)">${c.set || '—'}</td>
-      <td style="color:var(--muted)">${c.rarity || '—'}</td>
+    return `<tr data-variant="${esc(c.variant)}" tabindex="0" role="button" aria-label="Ver detalle de ${esc(c.name || c.variant)}">
+      <td class="t-vn">${esc(c.variant)}</td>
+      <td class="t-name">${esc(c.name)}${link}</td>
+      <td style="color:var(--muted)">${esc(c.set) || '—'}</td>
+      <td style="color:var(--muted)">${esc(c.rarity) || '—'}</td>
       <td style="color:var(--amber)">${c.eur_price != null ? fmtEur(c.eur_price) : '—'}</td>
       <td>${sparkline(c.spark)}</td>
       <td style="color:var(--cyan)">${c.usd_price  != null ? fmtUsd(c.usd_price) : '—'}</td>
@@ -756,13 +899,14 @@ function populateFilters(cards) {
   const sets     = [...new Set(cards.map(c => c.set).filter(Boolean))].sort();
   const rarities = [...new Set(cards.map(c => c.rarity).filter(Boolean))].sort();
   $('filter-set').innerHTML    = '<option value="">Todos los sets</option>' +
-    sets.map(s => `<option value="${s}">${s}</option>`).join('');
+    sets.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
   $('filter-rarity').innerHTML = '<option value="">Todas las rarezas</option>' +
-    rarities.map(r => `<option value="${r}">${r}</option>`).join('');
+    rarities.map(r => `<option value="${esc(r)}">${esc(r)}</option>`).join('');
 }
 
 /* ─── Modal de detalle por carta ─────────────────────────────────────────── */
 let modalChart = null;
+let lastFocused = null;
 
 function openCardModal(c) {
   $('modal-title').textContent = c.name || c.variant;
@@ -779,7 +923,7 @@ function openCardModal(c) {
     `<span style="color:var(--amber)">EUR ${fmtEur(c.eur_price)}</span>`,
     `<span style="color:var(--cyan)">USD ${fmtUsd(c.usd_price)}</span>`,
     deltaHtml,
-    c.url ? `<a href="${c.url}" target="_blank" rel="noopener">Cardmarket ↗</a>` : '',
+    c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">Cardmarket ↗</a>` : '',
   ].filter(Boolean).join('');
 
   if (modalChart) { modalChart.destroy(); modalChart = null; }
@@ -816,11 +960,26 @@ function openCardModal(c) {
     });
   }
   $('card-modal').classList.add('open');
+  lastFocused = document.activeElement;
+  $('modal-close').focus();
 }
 
 function closeCardModal() {
   $('card-modal').classList.remove('open');
   if (modalChart) { modalChart.destroy(); modalChart = null; }
+  if (lastFocused && lastFocused.focus) lastFocused.focus();
+  lastFocused = null;
+}
+
+// Focus trap: mantiene el tabulador dentro del modal mientras está abierto.
+function trapModalFocus(e) {
+  const modal = $('card-modal');
+  if (e.key !== 'Tab' || !modal.classList.contains('open')) return;
+  const focusables = modal.querySelectorAll('a[href],button,[tabindex]:not([tabindex="-1"])');
+  if (!focusables.length) return;
+  const first = focusables[0], last = focusables[focusables.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
 }
 
 function renderCards(cards) {
@@ -828,23 +987,29 @@ function renderCards(cards) {
   $('sec-cards').style.display = '';
   allCards = cards;
 
-  // Sort headers
+  // Sort headers (click + teclado Enter/Espacio, con aria-sort)
+  function doSort(th) {
+    const col = th.dataset.col;
+    document.querySelectorAll('th[data-col]').forEach(t => {
+      if (t !== th) { t.classList.remove('sort-asc', 'sort-desc'); t.removeAttribute('aria-sort'); }
+    });
+    if (sortCol === col) {
+      sortDir *= -1;
+    } else {
+      sortCol = col;
+      sortDir = -1;
+    }
+    th.classList.toggle('sort-asc',  sortDir ===  1);
+    th.classList.toggle('sort-desc', sortDir === -1);
+    th.setAttribute('aria-sort', sortDir === 1 ? 'ascending' : 'descending');
+    sortCards();
+    page = 0;
+    renderTable();
+  }
   document.querySelectorAll('th[data-col]').forEach(th => {
-    th.addEventListener('click', () => {
-      const col = th.dataset.col;
-      if (sortCol === col) {
-        sortDir *= -1;
-        th.classList.toggle('sort-asc',  sortDir ===  1);
-        th.classList.toggle('sort-desc', sortDir === -1);
-      } else {
-        document.querySelectorAll('th[data-col]').forEach(t => t.classList.remove('sort-asc','sort-desc'));
-        sortCol = col;
-        sortDir = -1;
-        th.classList.add('sort-desc');
-      }
-      sortCards();
-      page = 0;
-      renderTable();
+    th.addEventListener('click', () => doSort(th));
+    th.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); doSort(th); }
     });
   });
 
@@ -853,19 +1018,203 @@ function renderCards(cards) {
   $('filter-set').addEventListener('change', applyFilter);
   $('filter-rarity').addEventListener('change', applyFilter);
 
-  // Click en fila → modal de detalle (los enlaces ↗ siguen funcionando normal)
+  // Fila → modal (click o Enter/Espacio); los enlaces ↗ siguen funcionando
+  function openRow(tr) {
+    const c = allCards.find(x => x.variant === tr.dataset.variant);
+    if (c) openCardModal(c);
+  }
   $('cards-tbody').addEventListener('click', e => {
     if (e.target.closest('a')) return;
     const tr = e.target.closest('tr[data-variant]');
-    if (!tr) return;
-    const c = allCards.find(x => x.variant === tr.dataset.variant);
-    if (c) openCardModal(c);
+    if (tr) openRow(tr);
+  });
+  $('cards-tbody').addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const tr = e.target.closest('tr[data-variant]');
+    if (tr) { e.preventDefault(); openRow(tr); }
   });
   $('modal-close').addEventListener('click', closeCardModal);
   $('card-modal').addEventListener('click', e => { if (e.target === $('card-modal')) closeCardModal(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCardModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeCardModal();
+    trapModalFocus(e);
+  });
 
   applyFilter();
+}
+
+/* ─── Color por variación (compartido treemap + heatmap) ─────────────────── */
+function varColor(pct) {
+  if (pct == null) return '#2a2f37';
+  if (pct <= -15) return '#f87171';
+  if (pct <   -2) return '#3a1a1a';
+  if (pct <=   2) return '#2a2f37';
+  if (pct <   15) return '#1a3a25';
+  return '#4ade80';
+}
+
+/* ─── Treemap squarified (cartas por precio unitario, color = variación 30d) */
+function treemapLayout(items, X, Y, W, H) {
+  const out = [];
+  let nodes = items.slice(), x = X, y = Y, w = W, h = H;
+  while (nodes.length && w > 0.5 && h > 0.5) {
+    const free = w * h;
+    const totalVal = nodes.reduce((s, n) => s + n.value, 0) || 1;
+    const areas = nodes.map(n => n.value / totalVal * free);
+    const short = Math.min(w, h);
+    const worst = len => {
+      let sum = 0, mx = -Infinity, mn = Infinity;
+      for (let k = 0; k < len; k++) { const a = areas[k]; sum += a; mx = Math.max(mx, a); mn = Math.min(mn, a); }
+      const s2 = short * short, sum2 = sum * sum;
+      return Math.max(s2 * mx / sum2, sum2 / (s2 * mn));
+    };
+    let len = 1;
+    while (len < nodes.length && worst(len + 1) <= worst(len)) len++;
+    const rowAreas = areas.slice(0, len);
+    const rowSum = rowAreas.reduce((s, a) => s + a, 0);
+    if (w >= h) {
+      const cw = rowSum / h; let yy = y;
+      for (let k = 0; k < len; k++) { const nh = rowAreas[k] / cw; out.push({ node: nodes[k], x, y: yy, w: cw, h: nh }); yy += nh; }
+      x += cw; w -= cw;
+    } else {
+      const rh = rowSum / w; let xx = x;
+      for (let k = 0; k < len; k++) { const nw = rowAreas[k] / rh; out.push({ node: nodes[k], x: xx, y, w: nw, h: rh }); xx += nw; }
+      y += rh; h -= rh;
+    }
+    nodes = nodes.slice(len);
+  }
+  return out;
+}
+
+function renderTreemap(cards) {
+  const top = cards.filter(c => c.eur_price > 0)
+    .sort((a, b) => b.eur_price - a.eur_price).slice(0, 60);
+  if (top.length < 3) return;
+  $('sec-treemap').style.display = '';
+  const el = $('treemap');
+  const draw = () => {
+    const W = el.clientWidth || 600, H = el.clientHeight || 300;
+    const tiles = treemapLayout(top.map(c => ({ value: c.eur_price, c })), 0, 0, W, H);
+    el.innerHTML = tiles.map(t => {
+      const c = t.node.c, big = t.w > 56 && t.h > 30;
+      const lbl = big ? `<div class="tm-label">${esc(c.name || c.variant)}</div><div class="tm-val">${fmtEur(c.eur_price)}</div>` : '';
+      return `<div class="tm-tile" data-variant="${esc(c.variant)}" tabindex="0" role="button" aria-label="${esc(c.name || c.variant)} ${fmtEur(c.eur_price)}" title="${esc(c.name || c.variant)} · ${fmtEur(c.eur_price)} · 30d ${fmtPct(c.eur_pct_30d)}" style="left:${t.x}px;top:${t.y}px;width:${t.w}px;height:${t.h}px;background:${varColor(c.eur_pct_30d)}">${lbl}</div>`;
+    }).join('');
+    const open = tile => { const c = cards.find(x => x.variant === tile.dataset.variant); if (c) openCardModal(c); };
+    el.querySelectorAll('.tm-tile').forEach(t => {
+      t.addEventListener('click', () => open(t));
+      t.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(t); } });
+    });
+  };
+  draw();
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(draw, 200); });
+}
+
+/* ─── Heatmap de variación por set × rareza ──────────────────────────────── */
+function renderHeatmap(cards) {
+  const sets = [...new Set(cards.map(c => c.set).filter(Boolean))];
+  const order = ['Legendary', 'Epic', 'Rare', 'Uncommon', 'Common'];
+  const rars = [...new Set(cards.map(c => c.rarity).filter(Boolean))]
+    .sort((a, b) => (order.indexOf(a) < 0 ? 99 : order.indexOf(a)) - (order.indexOf(b) < 0 ? 99 : order.indexOf(b)));
+  if (!sets.length || !rars.length) return;
+  $('sec-heatmap').style.display = '';
+  const draw = period => {
+    const agg = {};
+    for (const c of cards) {
+      if (!c.set || !c.rarity || c[period] == null) continue;
+      const k = c.set + '|' + c.rarity;
+      (agg[k] = agg[k] || { sum: 0, n: 0 });
+      agg[k].sum += c[period]; agg[k].n++;
+    }
+    let html = '<table class="heatmap"><thead><tr><th></th>' +
+      rars.map(r => `<th>${esc(r)}</th>`).join('') + '</tr></thead><tbody>';
+    for (const s of sets) {
+      html += `<tr><th>${esc(s)}</th>`;
+      for (const r of rars) {
+        const a = agg[s + '|' + r];
+        if (!a) { html += '<td class="empty">·</td>'; continue; }
+        const avg = a.sum / a.n;
+        html += `<td class="cell" title="${esc(s)} · ${esc(r)} · media ${fmtPct(avg)} · ${a.n} cartas" style="background:${varColor(avg)}">${a.n}</td>`;
+      }
+      html += '</tr>';
+    }
+    $('heatmap').innerHTML = html + '</tbody></table>';
+  };
+  draw('eur_pct_7d');
+  $('heatmap-period').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    $('heatmap-period').querySelectorAll('button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); draw(b.dataset.p);
+  }));
+}
+
+/* ─── Comparador de cartas ───────────────────────────────────────────────── */
+const CMP_COLORS = ['#67e8f9', '#fbbf24', '#4ade80', '#c084fc'];
+let cmpCards = [], cmpMode = 'abs', cmpChart = null;
+function renderComparator(cards) {
+  const pool = cards.filter(c => Array.isArray(c.spark) && c.spark.length >= 2);
+  if (pool.length < 2) return;
+  $('sec-compare').style.display = '';
+  const idx = new Map();
+  $('cmp-list').innerHTML = pool.map(c => {
+    const lbl = `${c.variant} — ${c.name || ''}`.trim();
+    idx.set(lbl, c); idx.set(c.variant, c);
+    return `<option value="${esc(lbl)}"></option>`;
+  }).join('');
+  $('cmp-search').addEventListener('change', () => {
+    const v = $('cmp-search').value.trim();
+    const c = idx.get(v) || idx.get(v.split(' — ')[0]);
+    if (c && !cmpCards.find(x => x.variant === c.variant) && cmpCards.length < 4) { cmpCards.push(c); drawCmp(); }
+    $('cmp-search').value = '';
+  });
+  $('cmp-mode').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    cmpMode = b.dataset.m;
+    $('cmp-mode').querySelectorAll('button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); drawCmp();
+  }));
+  drawCmp();
+}
+function drawCmp() {
+  $('cmp-chips').innerHTML = cmpCards.map((c, i) =>
+    `<span class="cmp-chip" style="border-color:${CMP_COLORS[i]}"><span style="color:${CMP_COLORS[i]}">${esc(c.name || c.variant)}</span><button data-i="${i}" aria-label="Quitar ${esc(c.name || c.variant)}">×</button></span>`
+  ).join('');
+  $('cmp-chips').querySelectorAll('button').forEach(b =>
+    b.addEventListener('click', () => { cmpCards.splice(+b.dataset.i, 1); drawCmp(); }));
+  if (cmpChart) { cmpChart.destroy(); cmpChart = null; }
+  const hint = $('cmp-hint');
+  if (!cmpCards.length) {
+    hint.textContent = 'Añade hasta 4 cartas para comparar su evolución. "Índice 100" normaliza para comparar tendencias.';
+    return;
+  }
+  const maxLen = Math.max(...cmpCards.map(c => c.spark.length));
+  const labels = Array.from({ length: maxLen }, (_, i) => i === maxLen - 1 ? 'hoy' : `${i - maxLen + 1}d`);
+  const datasets = cmpCards.map((c, i) => {
+    const s = c.spark.slice();
+    const data = s.map(v => cmpMode === 'idx' && s[0] ? v / s[0] * 100 : v);
+    return {
+      label: c.name || c.variant,
+      data: Array(maxLen - s.length).fill(null).concat(data),
+      borderColor: CMP_COLORS[i], backgroundColor: 'transparent',
+      borderWidth: 2, tension: 0.3, pointRadius: 0, pointHoverRadius: 4, spanGaps: false,
+    };
+  });
+  cmpChart = new Chart($('cmp-chart'), {
+    type: 'line', data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: true, labels: { color: '#98a2b3', boxWidth: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${cmpMode === 'idx' ? ctx.parsed.y.toFixed(1) : fmtEur(ctx.parsed.y)}` } },
+      },
+      scales: {
+        x: { ticks: { color: '#98a2b3', maxTicksLimit: 6 }, grid: { color: '#1c2026' } },
+        y: { ticks: { color: '#98a2b3', callback: v => cmpMode === 'idx' ? v : '€' + v }, grid: { color: '#1c2026' } },
+      }
+    }
+  });
+  hint.textContent = cmpMode === 'idx'
+    ? 'Índice 100 = primer día de cada carta; compara tendencias relativas.'
+    : 'Precio EUR absoluto por día.';
 }
 
 /* ─── Bootstrap ─────────────────────────────────────────────────────────── */
@@ -894,6 +1243,9 @@ initTabs();
     renderMovers(moversUsd, moversEur);
     renderTopTrends(cards);
     renderBreakdown(breakdown);
+    renderTreemap(cards);
+    renderHeatmap(cards);
+    renderComparator(cards);
     renderCards(cards);
 
   } catch (e) {

@@ -4,7 +4,7 @@
  * frescos, pero si no hay conexión sirve la última versión cacheada (la app
  * abre al instante en el móvil y funciona offline con los últimos datos).
  */
-const CACHE = 'riftbound-v1';
+const CACHE = 'riftbound-v2';
 
 self.addEventListener('install', () => self.skipWaiting());
 
