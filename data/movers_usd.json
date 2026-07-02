@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "variant_number": "OGN-166",
+    "name": "Chaos Rune",
+    "set": "Origins",
+    "old_usd": 0.11,
+    "new_usd": 1.71,
+    "pct": 1454.5
+  },
+  {
+    "variant_number": "UNL-176-Foil",
+    "name": "Vi, Peacekeeper",
+    "set": "Unleashed",
+    "old_usd": 3.33,
+    "new_usd": 2.23,
+    "pct": -33.0
+  }
+]
