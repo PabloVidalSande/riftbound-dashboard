@@ -1,10 +1,18 @@
 [
   {
-    "variant_number": "SFD-028a-Foil",
-    "name": "Lucian, Gunslinger",
-    "set": "Spiritforged",
-    "old_usd": 1.0,
-    "new_usd": 1.26,
-    "pct": 26.0
+    "variant_number": "OGN-166",
+    "name": "Chaos Rune",
+    "set": "Origins",
+    "old_usd": 1.75,
+    "new_usd": 0.17,
+    "pct": -90.3
+  },
+  {
+    "variant_number": "UNL-053-Foil",
+    "name": "Scuttle Crab",
+    "set": "Unleashed",
+    "old_usd": 1.18,
+    "new_usd": 1.67,
+    "pct": 41.5
   }
 ]
