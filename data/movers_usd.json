@@ -1,18 +1,18 @@
 [
   {
-    "variant_number": "OGN-166",
-    "name": "Chaos Rune",
+    "variant_number": "OGN-194-Foil",
+    "name": "Nocturne, Horrifying",
     "set": "Origins",
-    "old_usd": 1.75,
-    "new_usd": 0.17,
-    "pct": -90.3
+    "old_usd": 1.41,
+    "new_usd": 5.01,
+    "pct": 255.3
   },
   {
-    "variant_number": "UNL-053-Foil",
-    "name": "Scuttle Crab",
+    "variant_number": "UNL-078",
+    "name": "Sprite Fountain",
     "set": "Unleashed",
-    "old_usd": 1.18,
-    "new_usd": 1.67,
-    "pct": 41.5
+    "old_usd": 1.67,
+    "new_usd": 2.34,
+    "pct": 40.1
   }
 ]
