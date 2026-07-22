@@ -1,18 +1,10 @@
 [
   {
-    "variant_number": "SFD-141a-Foil",
-    "name": "Irelia, Graceful",
-    "set": "Spiritforged",
-    "old_usd": 3.24,
-    "new_usd": 4.25,
-    "pct": 31.2
-  },
-  {
-    "variant_number": "SFD-025-Foil",
-    "name": "Rengar, Pouncing",
-    "set": "Spiritforged",
-    "old_usd": 1.26,
-    "new_usd": 0.92,
-    "pct": -27.0
+    "variant_number": "UNL-053-Foil",
+    "name": "Scuttle Crab",
+    "set": "Unleashed",
+    "old_usd": 2.31,
+    "new_usd": 3.09,
+    "pct": 33.8
   }
 ]
