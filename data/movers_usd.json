@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "variant_number": "OGN-210-Nexus",
+    "name": "Daring Poro",
+    "set": "Origins | Nexus Night",
+    "old_usd": 0.57,
+    "new_usd": 1.19,
+    "pct": 108.8
+  },
+  {
+    "variant_number": "OGN-171-Nexus",
+    "name": "Mystic Poro",
+    "set": "Origins | Nexus Night",
+    "old_usd": 0.6,
+    "new_usd": 1.13,
+    "pct": 88.3
+  }
+]
