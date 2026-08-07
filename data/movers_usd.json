@@ -1,10 +1,26 @@
 [
   {
-    "variant_number": "OGN-194-Foil",
-    "name": "Nocturne, Horrifying",
-    "set": "Origins",
-    "old_usd": 5.61,
-    "new_usd": 7.02,
-    "pct": 25.1
+    "variant_number": "SFD-136",
+    "name": "Hard Bargain",
+    "set": "Spiritforged",
+    "old_usd": 1.23,
+    "new_usd": 1.66,
+    "pct": 35.0
+  },
+  {
+    "variant_number": "SFD-045",
+    "name": "Not So Fast",
+    "set": "Spiritforged",
+    "old_usd": 1.33,
+    "new_usd": 1.71,
+    "pct": 28.6
+  },
+  {
+    "variant_number": "SFD-048",
+    "name": "Stellacorn Herder",
+    "set": "Spiritforged",
+    "old_usd": 0.93,
+    "new_usd": 1.17,
+    "pct": 25.8
   }
 ]
