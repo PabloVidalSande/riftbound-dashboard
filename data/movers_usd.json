@@ -1,26 +1,10 @@
 [
   {
-    "variant_number": "SFD-136",
-    "name": "Hard Bargain",
-    "set": "Spiritforged",
-    "old_usd": 1.23,
-    "new_usd": 1.66,
-    "pct": 35.0
-  },
-  {
-    "variant_number": "SFD-045",
-    "name": "Not So Fast",
-    "set": "Spiritforged",
-    "old_usd": 1.33,
-    "new_usd": 1.71,
-    "pct": 28.6
-  },
-  {
-    "variant_number": "SFD-048",
-    "name": "Stellacorn Herder",
-    "set": "Spiritforged",
-    "old_usd": 0.93,
-    "new_usd": 1.17,
-    "pct": 25.8
+    "variant_number": "UNL-053-Foil",
+    "name": "Scuttle Crab",
+    "set": "Unleashed",
+    "old_usd": 3.62,
+    "new_usd": 4.56,
+    "pct": 26.0
   }
 ]
