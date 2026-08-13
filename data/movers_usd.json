@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "variant_number": "OGN-173",
+    "name": "Ride the Wind",
+    "set": "Origins",
+    "old_usd": 0.8,
+    "new_usd": 1.02,
+    "pct": 27.5
+  }
+]
