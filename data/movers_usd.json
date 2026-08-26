@@ -1,10 +1,18 @@
 [
   {
-    "variant_number": "SFD-028-Foil",
-    "name": "Lucian, Gunslinger",
+    "variant_number": "SFD-048",
+    "name": "Stellacorn Herder",
     "set": "Spiritforged",
-    "old_usd": 0.81,
-    "new_usd": 1.07,
-    "pct": 32.1
+    "old_usd": 1.48,
+    "new_usd": 1.94,
+    "pct": 31.1
+  },
+  {
+    "variant_number": "SFD-145-Foil",
+    "name": "Switcheroo",
+    "set": "Spiritforged",
+    "old_usd": 1.57,
+    "new_usd": 1.99,
+    "pct": 26.8
   }
 ]
