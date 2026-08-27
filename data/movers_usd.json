@@ -1,18 +1,10 @@
 [
   {
-    "variant_number": "SFD-048",
-    "name": "Stellacorn Herder",
-    "set": "Spiritforged",
-    "old_usd": 1.48,
-    "new_usd": 1.94,
-    "pct": 31.1
-  },
-  {
-    "variant_number": "SFD-145-Foil",
-    "name": "Switcheroo",
-    "set": "Spiritforged",
-    "old_usd": 1.57,
-    "new_usd": 1.99,
-    "pct": 26.8
+    "variant_number": "UNL-078",
+    "name": "Sprite Fountain",
+    "set": "Unleashed",
+    "old_usd": 4.29,
+    "new_usd": 5.49,
+    "pct": 28.0
   }
 ]
