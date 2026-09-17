@@ -1,26 +1,10 @@
 [
   {
-    "variant_number": "OGN-183",
-    "name": "Stacked Deck",
-    "set": "Origins",
-    "old_usd": 7.74,
-    "new_usd": 1.06,
-    "pct": -86.3
-  },
-  {
-    "variant_number": "OGN-183-Nexus",
-    "name": "Stacked Deck",
-    "set": "Origins | Nexus Night",
-    "old_usd": 12.75,
-    "new_usd": 7.72,
-    "pct": -39.5
-  },
-  {
-    "variant_number": "OGN-234-Foil",
-    "name": "Harnessed Dragon",
-    "set": "Origins",
-    "old_usd": 1.46,
-    "new_usd": 1.86,
-    "pct": 27.4
+    "variant_number": "SFD-136",
+    "name": "Hard Bargain",
+    "set": "Spiritforged",
+    "old_usd": 1.17,
+    "new_usd": 0.85,
+    "pct": -27.4
   }
 ]
