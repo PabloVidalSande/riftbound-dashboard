@@ -1,10 +1,18 @@
 [
   {
-    "variant_number": "OGN-236-Foil",
-    "name": "Karthus, Eternal",
-    "set": "Origins",
-    "old_usd": 1.87,
+    "variant_number": "UNL-078",
+    "name": "Sprite Fountain",
+    "set": "Unleashed",
+    "old_usd": 3.27,
     "new_usd": 2.41,
-    "pct": 28.9
+    "pct": -26.3
+  },
+  {
+    "variant_number": "OGN-045",
+    "name": "Defy",
+    "set": "Origins",
+    "old_usd": 2.79,
+    "new_usd": 2.09,
+    "pct": -25.1
   }
 ]
