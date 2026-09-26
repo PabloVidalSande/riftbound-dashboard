@@ -68,5 +68,10 @@
       "pct": 10.8,
       "variants": 12
     }
-  ]
+  ],
+  "surplus": {
+    "variants": 262,
+    "value_eur": 70.18,
+    "sale_eur": 65.09
+  }
 }

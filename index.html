@@ -100,6 +100,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .badge-up{background:#1a3a25;color:var(--green2)}
 .badge-strong-dn{background:#450a0a;color:var(--red)}
 .badge-dn{background:#3a1a1a;color:var(--orange)}
+.badge-sale{background:#3b2a12;color:var(--amber);margin-left:6px;vertical-align:middle}
 .signal-card .s-meta{display:flex;gap:14px;font-size:12px;color:var(--muted)}
 .signal-card .s-meta span{white-space:nowrap}
 .s-prices{display:flex;gap:16px;margin-top:6px;font-size:12px}
@@ -346,6 +347,7 @@ table.heatmap td.empty{color:var(--border)}
     <div class="table-toolbar">
       <div class="sec-title" style="margin-bottom:0">Cartas de la colección</div>
       <div class="toolbar-controls">
+        <select id="filter-pool" class="filter-select" aria-label="Colección o sobrantes"><option value="">Toda la colección</option><option value="surplus">Sólo sobrantes (a la venta)</option></select>
         <select id="filter-set" class="filter-select"><option value="">Todos los sets</option></select>
         <select id="filter-rarity" class="filter-select"><option value="">Todas las rarezas</option></select>
         <input id="card-search" class="search-input" type="text" placeholder="Buscar carta o variante…">
@@ -781,6 +783,18 @@ function renderBreakdown(bd) {
 
   hbarChart('chart-set',    setLabels, setVals, setColors);
   hbarChart('chart-rarity', rarLabels, rarVals, rarColors);
+
+  // Sobrantes: agregado (sin cantidades por carta), como el valor total
+  const sp = bd.surplus;
+  if (sp && sp.variants) {
+    const note = document.createElement('div');
+    note.className = 'viz-legend';
+    note.id = 'surplus-note';
+    note.textContent = `📙 A la venta: ${sp.variants} cartas con copias de sobra · ${fmtEur(sp.value_eur)} a precio actual` +
+      (sp.sale_eur != null ? ` · ${fmtEur(sp.sale_eur)} a precio sugerido` : '') +
+      ' — filtra la tabla por "Sólo sobrantes".';
+    $('sec-breakdown').appendChild(note);
+  }
 }
 
 /* ─── Cards table ────────────────────────────────────────────────────────── */
@@ -835,10 +849,11 @@ function renderTable() {
     const mClass = c.momentum ? MOMENTUM_CLASS[c.momentum] || 'mom-s' : '';
     const mLabel = c.momentum ? MOMENTUM_LABEL[c.momentum] || c.momentum : '—';
     const link   = c.url ? ` <a href="${esc(c.url)}" target="_blank" rel="noopener" style="font-size:10px;color:var(--muted)">↗</a>` : '';
+    const sale   = c.surplus ? `<span class="badge badge-sale" title="Copias de sobra a la venta${c.sale_price != null ? ' · ' + fmtEur(c.sale_price) : ''}">venta</span>` : '';
     const p7cls  = c.pct_7d > 0 ? 'up' : c.pct_7d < 0 ? 'dn' : 'flat';
     return `<tr data-variant="${esc(c.variant)}" tabindex="0" role="button" aria-label="Ver detalle de ${esc(c.name || c.variant)}">
       <td class="t-vn">${esc(c.variant)}</td>
-      <td class="t-name">${esc(c.name)}${link}</td>
+      <td class="t-name">${esc(c.name)}${link}${sale}</td>
       <td style="color:var(--muted)">${esc(c.set) || '—'}</td>
       <td style="color:var(--muted)">${esc(c.rarity) || '—'}</td>
       <td style="color:var(--amber)">${c.eur_price != null ? fmtEur(c.eur_price) : '—'}</td>
@@ -881,7 +896,9 @@ function applyFilter() {
   const q    = $('card-search').value.trim().toLowerCase();
   const fSet = $('filter-set').value;
   const fRar = $('filter-rarity').value;
+  const fPool = $('filter-pool').value;
   filteredCards = allCards.filter(c => {
+    if (fPool === 'surplus' && !c.surplus) return false;
     if (fSet && c.set !== fSet) return false;
     if (fRar && c.rarity !== fRar) return false;
     if (!q) return true;
@@ -923,6 +940,7 @@ function openCardModal(c) {
     `<span style="color:var(--amber)">EUR ${fmtEur(c.eur_price)}</span>`,
     `<span style="color:var(--cyan)">USD ${fmtUsd(c.usd_price)}</span>`,
     deltaHtml,
+    c.surplus ? `<span style="color:var(--amber)">A la venta${c.sale_price != null ? ' · ' + fmtEur(c.sale_price) : ''}</span>` : '',
     c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">Cardmarket ↗</a>` : '',
   ].filter(Boolean).join('');
 
@@ -1015,8 +1033,11 @@ function renderCards(cards) {
 
   populateFilters(cards);
   $('card-search').addEventListener('input', applyFilter);
+  $('filter-pool').addEventListener('change', applyFilter);
   $('filter-set').addEventListener('change', applyFilter);
   $('filter-rarity').addEventListener('change', applyFilter);
+  // Si no hay ninguna carta a la venta, el filtro no aporta nada
+  if (!cards.some(c => c.surplus)) $('filter-pool').style.display = 'none';
 
   // Fila → modal (click o Enter/Espacio); los enlaces ↗ siguen funcionando
   function openRow(tr) {
