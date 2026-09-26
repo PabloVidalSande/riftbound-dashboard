@@ -72,6 +72,15 @@
   "surplus": {
     "variants": 262,
     "value_eur": 70.18,
-    "sale_eur": 65.09
+    "sale_eur": 65.09,
+    "review": 27,
+    "rule": {
+      "undercut_eur": 0.02,
+      "undercut_pct": 0.03,
+      "min_eur": 0.02,
+      "review_above_low": 1.15,
+      "bulk_threshold_eur": 0.3
+    },
+    "sales": null
   }
 }
