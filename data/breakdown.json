@@ -2,37 +2,37 @@
   "by_set": [
     {
       "set": "Origins",
-      "value_eur": 157.53,
-      "pct": 33.5,
+      "value_eur": 154.47,
+      "pct": 33.4,
       "variants": 266
     },
     {
       "set": "Spiritforged",
-      "value_eur": 128.76,
+      "value_eur": 126.76,
       "pct": 27.4,
       "variants": 206
     },
     {
       "set": "Unleashed",
-      "value_eur": 98.33,
-      "pct": 20.9,
+      "value_eur": 97.06,
+      "pct": 21.0,
       "variants": 205
     },
     {
       "set": "Vendetta",
-      "value_eur": 73.98,
-      "pct": 15.8,
+      "value_eur": 73.87,
+      "pct": 15.9,
       "variants": 148
     },
     {
       "set": "Origins | Nexus Night",
       "value_eur": 10.04,
-      "pct": 2.1,
+      "pct": 2.2,
       "variants": 9
     },
     {
       "set": "Proving Grounds",
-      "value_eur": 0.9,
+      "value_eur": 0.97,
       "pct": 0.2,
       "variants": 1
     }
@@ -40,47 +40,50 @@
   "by_rarity": [
     {
       "rarity": "Rare",
-      "value_eur": 149.88,
-      "pct": 31.9,
+      "value_eur": 147.03,
+      "pct": 31.7,
       "variants": 207
     },
     {
       "rarity": "Common",
-      "value_eur": 109.71,
-      "pct": 23.4,
+      "value_eur": 107.9,
+      "pct": 23.3,
       "variants": 324
     },
     {
       "rarity": "Uncommon",
-      "value_eur": 106.9,
-      "pct": 22.8,
+      "value_eur": 106.27,
+      "pct": 22.9,
       "variants": 265
     },
     {
       "rarity": "Epic",
-      "value_eur": 52.33,
-      "pct": 11.1,
+      "value_eur": 51.81,
+      "pct": 11.2,
       "variants": 27
     },
     {
       "rarity": "Showcase",
-      "value_eur": 50.72,
+      "value_eur": 50.16,
       "pct": 10.8,
       "variants": 12
     }
   ],
   "surplus": {
     "variants": 262,
-    "value_eur": 70.18,
-    "sale_eur": 65.09,
-    "review": 27,
+    "value_eur": 69.37,
+    "sale_eur": 63.84,
+    "review": 26,
     "rule": {
-      "undercut_eur": 0.02,
+      "base": "avg7",
+      "undercut_eur": 0.01,
+      "fallback": "trend",
       "undercut_pct": 0.03,
       "min_eur": 0.02,
       "review_above_low": 1.15,
       "bulk_threshold_eur": 0.3
     },
-    "sales": null
+    "sales": null,
+    "listed": null
   }
 }

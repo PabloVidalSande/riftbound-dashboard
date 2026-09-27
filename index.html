@@ -261,6 +261,7 @@ table.heatmap td.empty{color:var(--border)}
           <option value="">Todos los precios</option>
           <option value="review">Sólo "Revisar"</option>
           <option value="ok">Sólo OK</option>
+          <option value="misaligned">Sólo desalineadas</option>
         </select>
         <input id="sob-search" class="search-input" type="text" placeholder="Buscar sobrante…">
       </div>
@@ -278,6 +279,7 @@ table.heatmap td.empty{color:var(--border)}
             <th data-scol="rarity" tabindex="0" role="button" aria-label="Ordenar por rareza">Rareza</th>
             <th data-scol="eur_price" tabindex="0" role="button" aria-label="Ordenar por precio Cardmarket">Cardmarket €</th>
             <th data-scol="sale_price" tabindex="0" role="button" aria-label="Ordenar por precio de venta" class="sort-desc" aria-sort="descending">Vender a €</th>
+            <th data-scol="listed_price" tabindex="0" role="button" aria-label="Ordenar por precio listado en Cardmarket" id="sob-th-listed" title="Precio al que está listada en Cardmarket según la última foto de PowerTools">En Cardmarket €</th>
             <th data-scol="eur_pct_7d" tabindex="0" role="button" aria-label="Ordenar por variación EUR 7 días">7d %</th>
             <th data-scol="sale_flag" tabindex="0" role="button" aria-label="Ordenar por estado">Estado</th>
           </tr>
@@ -1285,7 +1287,7 @@ function drawCmp() {
 /* ─── Sobrantes a la venta ───────────────────────────────────────────────── */
 // Lista de lo que está a la venta con SU precio de venta: el mismo "Price"
 // que lleva powertools_sobrantes.csv a TCG PowerTools. Sin cantidades.
-let sobAll = [], sobFiltered = [];
+let sobAll = [], sobFiltered = [], sobHasListed = false;
 let sobSortCol = 'sale_price', sobSortDir = -1, sobPage = 0;
 
 function sobStateBadge(c) {
@@ -1294,9 +1296,29 @@ function sobStateBadge(c) {
   return '<span class="badge badge-ok" title="Precio de venta en línea con el mercado">OK</span>';
 }
 
+// Desvío del precio listado en Cardmarket respecto a la referencia (%), o null
+const ALIGN_PCT = 15, ALIGN_MIN_EUR = 0.10;
+function sobDeviation(c) {
+  if (c.listed_price == null || !c.sale_price) return null;
+  return (c.listed_price / c.sale_price - 1) * 100;
+}
+// Desalineada = se aleja más del % Y de los céntimos mínimos (en cartas de 3 céntimos un 100 % no dice nada)
+function sobMisaligned(c) {
+  const d = sobDeviation(c);
+  return d != null && Math.abs(d) >= ALIGN_PCT && Math.abs(c.listed_price - c.sale_price) >= ALIGN_MIN_EUR;
+}
+function sobListedCell(c) {
+  if (c.listed_price == null) return '<td style="color:var(--muted)">—</td>';
+  const dev = sobDeviation(c);
+  const mis = sobMisaligned(c);
+  const cls = !mis ? 'flat' : dev < 0 ? 'dn' : 'up';
+  const tip = dev == null ? '' : ` title="${dev >= 0 ? '+' : ''}${dev.toFixed(0)} % respecto a la referencia"`;
+  return `<td class="${cls}"${tip}>${fmtEur(c.listed_price)}${mis ? ` <span style="font-size:10px">${dev > 0 ? '▲' : '▼'}</span>` : ''}</td>`;
+}
+
 function sobSort() {
   const col = sobSortCol, dir = sobSortDir;
-  const numeric = col === 'sale_price' || col === 'eur_price' || col === 'eur_pct_7d';
+  const numeric = col === 'sale_price' || col === 'eur_price' || col === 'eur_pct_7d' || col === 'listed_price';
   sobFiltered.sort((a, b) => {
     let av = a[col], bv = b[col];
     if (av == null) av = numeric ? -Infinity : '';
@@ -1319,6 +1341,7 @@ function sobRenderTable() {
       <td style="color:var(--muted)">${esc(c.rarity) || '—'}</td>
       <td style="color:var(--amber)">${c.eur_price != null ? fmtEur(c.eur_price) : '—'}</td>
       <td style="font-weight:700">${c.sale_price != null ? fmtEur(c.sale_price) : '—'}</td>
+      ${sobHasListed ? sobListedCell(c) : ''}
       <td class="${p7cls}">${c.eur_pct_7d != null ? fmtPct(c.eur_pct_7d) : '—'}</td>
       <td>${sobStateBadge(c)}</td>
     </tr>`;
@@ -1343,6 +1366,7 @@ function sobApplyFilter() {
     if (fSet && c.set !== fSet) return false;
     if (fSt === 'review' && c.sale_flag !== 'Revisar') return false;
     if (fSt === 'ok' && (c.sale_flag === 'Revisar' || c.sale_price == null)) return false;
+    if (fSt === 'misaligned' && !sobMisaligned(c)) return false;
     if (!q) return true;
     return (c.name || '').toLowerCase().includes(q) ||
            (c.variant || '').toLowerCase().includes(q) ||
@@ -1359,15 +1383,28 @@ function renderSobrantes(cards, bd) {
   if (!sobAll.length) return;
   $('sec-sobrantes').style.display = '';
 
+  // Columna "En Cardmarket" sólo cuando hay una foto de stock de PowerTools
+  sobHasListed = sobAll.some(c => c.listed_price != null);
+  if (!sobHasListed) {
+    $('sob-th-listed').style.display = 'none';
+    $('sob-state').querySelector('option[value="misaligned"]').disabled = true;
+  }
+
   // KPIs: agregados (sin cantidades por carta), como en el desglose
   const sp = (bd && bd.surplus) || {};
   const review  = sobAll.filter(c => c.sale_flag === 'Revisar').length;
   const noPrice = sobAll.filter(c => c.sale_price == null).length;
+  const misaligned = sobAll.filter(sobMisaligned).length;
+  const lst = sp.listed || null;
   $('sob-kpis').innerHTML = [
     ['A la venta', `${sobAll.length}`, 'cartas con copias de sobra', ''],
     ['Valor Cardmarket', sp.value_eur != null ? fmtEur(sp.value_eur) : '—', 'a precio de tendencia', 'var(--amber)'],
     ['A precio de venta', sp.sale_eur != null ? fmtEur(sp.sale_eur) : '—', 'lo que va a PowerTools', ''],
     ['Para revisar', `${review}`, noPrice ? `+ ${noPrice} sin precio` : 'precio muy por encima del mínimo', review ? 'var(--red)' : 'var(--green)'],
+    // Foto de stock de PowerTools: precio listado vs referencia
+    sobHasListed
+      ? ['Desalineadas', `${misaligned}`, `de ${sobAll.filter(c => c.listed_price != null).length} listadas (±${ALIGN_PCT} % y ±${fmtEur(ALIGN_MIN_EUR)})${lst && lst.date ? ' · foto ' + lst.date : ''}`, misaligned ? 'var(--amber)' : 'var(--green)']
+      : null,
     // Ventas (de ventas_log.json, alimentado por el export de Cardmarket)
     sp.sales && sp.sales.units_total
       ? ['Vendidas 30d', `${sp.sales.units_30d}`, `${fmtEur(sp.sales.revenue_30d)} · total ${sp.sales.units_total} uds / ${fmtEur(sp.sales.revenue_total)}`, 'var(--green)']
@@ -1378,12 +1415,13 @@ function renderSobrantes(cards, bd) {
 
   const rule = sp.rule || {};
   const pct  = rule.undercut_pct != null ? (rule.undercut_pct * 100).toLocaleString('es-ES') + ' %' : '3 %';
-  const eur  = rule.undercut_eur != null ? fmtEur(rule.undercut_eur) : '0,02 €';
+  const eur  = rule.undercut_eur != null ? fmtEur(rule.undercut_eur) : '0,01 €';
   const min  = rule.min_eur != null ? fmtEur(rule.min_eur) : '0,02 €';
   $('sob-rule').innerHTML =
-    `<b>Vender a</b> = máx(tendencia Cardmarket, media de ventas 7 días) − mín(${eur}, ${pct}), nunca por debajo de ${min}. ` +
-    `Es el mismo precio que lleva <b>powertools_sobrantes.csv</b> a TCG PowerTools, recalculado cada día. ` +
-    `<b>Revisar</b> = queda más de un 15 % por encima del mínimo listado en Cardmarket.`;
+    `<b>Vender a</b> = media de ventas de 7 días en Cardmarket − ${eur}; sin ventas en la semana, tendencia − ${pct}; nunca por debajo de ${min}. ` +
+    `Es la misma regla que el bot de TCG PowerTools (Price Guide AVG7, respaldo Trend), recalculada cada mañana. ` +
+    `<b>Revisar</b> = queda más de un 15 % por encima del mínimo listado en Cardmarket.` +
+    (sobHasListed ? ` <b>En Cardmarket</b> = precio real de tu listado según la última foto de stock de PowerTools; ▲▼ cuando se aleja más de un ${ALIGN_PCT} % (y ${fmtEur(ALIGN_MIN_EUR)}) de la referencia.` : '');
 
   const sets = [...new Set(sobAll.map(c => c.set).filter(Boolean))].sort();
   $('sob-set').innerHTML = '<option value="">Todos los sets</option>' +
