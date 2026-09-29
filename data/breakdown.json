@@ -3,25 +3,25 @@
     {
       "set": "Origins",
       "value_eur": 292.17,
-      "pct": 49.3,
+      "pct": 48.9,
       "variants": 317
     },
     {
       "set": "Spiritforged",
       "value_eur": 144.53,
-      "pct": 24.4,
+      "pct": 24.2,
       "variants": 235
     },
     {
       "set": "Unleashed",
       "value_eur": 102.92,
-      "pct": 17.4,
+      "pct": 17.2,
       "variants": 205
     },
     {
       "set": "Vendetta",
-      "value_eur": 49.36,
-      "pct": 8.3,
+      "value_eur": 50.5,
+      "pct": 8.5,
       "variants": 160
     },
     {
@@ -31,61 +31,61 @@
       "variants": 7
     },
     {
-      "set": "Proving Grounds",
-      "value_eur": 0.92,
-      "pct": 0.2,
-      "variants": 1
-    },
-    {
       "set": "Unleashed | Nexus Night",
-      "value_eur": 0.0,
-      "pct": 0.0,
+      "value_eur": 1.79,
+      "pct": 0.3,
       "variants": 11
     },
     {
       "set": "Vendetta | Nexus Night",
-      "value_eur": 0.0,
-      "pct": 0.0,
+      "value_eur": 1.53,
+      "pct": 0.3,
       "variants": 6
+    },
+    {
+      "set": "Proving Grounds",
+      "value_eur": 0.92,
+      "pct": 0.2,
+      "variants": 1
     }
   ],
   "by_rarity": [
     {
       "rarity": "Rare",
       "value_eur": 190.95,
-      "pct": 32.2,
+      "pct": 32.0,
       "variants": 228
     },
     {
       "rarity": "Common",
-      "value_eur": 146.81,
+      "value_eur": 148.23,
       "pct": 24.8,
       "variants": 364
     },
     {
       "rarity": "Uncommon",
-      "value_eur": 141.33,
-      "pct": 23.8,
+      "value_eur": 144.37,
+      "pct": 24.2,
       "variants": 306
     },
     {
       "rarity": "Epic",
       "value_eur": 75.5,
-      "pct": 12.7,
+      "pct": 12.6,
       "variants": 33
     },
     {
       "rarity": "Showcase",
       "value_eur": 38.4,
-      "pct": 6.5,
+      "pct": 6.4,
       "variants": 11
     }
   ],
   "surplus": {
     "variants": 492,
-    "value_eur": 164.85,
-    "sale_eur": 153.28,
-    "review": 52,
+    "value_eur": 169.19,
+    "sale_eur": 157.35,
+    "review": 55,
     "rule": {
       "base": "avg7",
       "undercut_eur": 0.01,
