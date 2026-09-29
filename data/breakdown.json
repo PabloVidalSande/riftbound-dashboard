@@ -2,78 +2,90 @@
   "by_set": [
     {
       "set": "Origins",
-      "value_eur": 204.7,
-      "pct": 41.2,
-      "variants": 292
+      "value_eur": 292.17,
+      "pct": 49.3,
+      "variants": 317
     },
     {
       "set": "Spiritforged",
-      "value_eur": 136.65,
-      "pct": 27.5,
-      "variants": 204
+      "value_eur": 144.53,
+      "pct": 24.4,
+      "variants": 235
     },
     {
       "set": "Unleashed",
-      "value_eur": 98.48,
-      "pct": 19.8,
-      "variants": 199
+      "value_eur": 102.92,
+      "pct": 17.4,
+      "variants": 205
     },
     {
       "set": "Vendetta",
-      "value_eur": 46.82,
-      "pct": 9.4,
-      "variants": 149
+      "value_eur": 49.36,
+      "pct": 8.3,
+      "variants": 160
     },
     {
       "set": "Origins | Nexus Night",
-      "value_eur": 9.6,
-      "pct": 1.9,
-      "variants": 8
+      "value_eur": 3.09,
+      "pct": 0.5,
+      "variants": 7
     },
     {
       "set": "Proving Grounds",
       "value_eur": 0.92,
       "pct": 0.2,
       "variants": 1
+    },
+    {
+      "set": "Unleashed | Nexus Night",
+      "value_eur": 0.0,
+      "pct": 0.0,
+      "variants": 11
+    },
+    {
+      "set": "Vendetta | Nexus Night",
+      "value_eur": 0.0,
+      "pct": 0.0,
+      "variants": 6
     }
   ],
   "by_rarity": [
     {
       "rarity": "Rare",
-      "value_eur": 182.2,
-      "pct": 36.6,
-      "variants": 225
-    },
-    {
-      "rarity": "Uncommon",
-      "value_eur": 110.25,
-      "pct": 22.2,
-      "variants": 265
+      "value_eur": 190.95,
+      "pct": 32.2,
+      "variants": 228
     },
     {
       "rarity": "Common",
-      "value_eur": 109.52,
-      "pct": 22.0,
-      "variants": 323
+      "value_eur": 146.81,
+      "pct": 24.8,
+      "variants": 364
+    },
+    {
+      "rarity": "Uncommon",
+      "value_eur": 141.33,
+      "pct": 23.8,
+      "variants": 306
     },
     {
       "rarity": "Epic",
-      "value_eur": 74.98,
-      "pct": 15.1,
+      "value_eur": 75.5,
+      "pct": 12.7,
       "variants": 33
     },
     {
       "rarity": "Showcase",
-      "value_eur": 20.22,
-      "pct": 4.1,
-      "variants": 7
+      "value_eur": 38.4,
+      "pct": 6.5,
+      "variants": 11
     }
   ],
   "surplus": {
-    "variants": 262,
-    "value_eur": 69.03,
-    "sale_eur": 63.51,
-    "review": 26,
+    "variants": 492,
+    "value_eur": 164.85,
+    "sale_eur": 153.28,
+    "review": 52,
     "rule": {
       "base": "avg7",
       "undercut_eur": 0.01,
