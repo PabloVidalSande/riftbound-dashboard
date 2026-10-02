@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "variant_number": "SFD-048",
+    "name": "Stellacorn Herder",
+    "set": "Spiritforged",
+    "old_usd": 1.12,
+    "new_usd": 1.53,
+    "pct": 36.6
+  }
+]
