@@ -228,7 +228,7 @@ table.heatmap td.empty{color:var(--border)}
 <div class="wrap">
 
   <header>
-    <div class="logo"><span>💎</span>Riftbound Tracker</div>
+    <div class="logo"><span id="logo-emoji">💎</span><span id="logo-name">Riftbound Tracker</span><span id="game-switch" style="margin-left:10px;font-size:12px;font-weight:400"></span></div>
     <div class="updated" id="updated">cargando…</div>
   </header>
 
@@ -1472,6 +1472,16 @@ initTabs();
 
 (async () => {
   try {
+    // Qué juego es (el mismo index.html sirve para Riftbound y Digimon)
+    const meta = await loadJson('data/meta.json').catch(() => null);
+    if (meta && meta.name) {
+      $('logo-name').textContent = `${meta.name} Tracker`;
+      if (meta.emoji) $('logo-emoji').textContent = meta.emoji;
+      document.title = `${meta.name} Tracker — precios de la colección`;
+      const others = (meta.games || []).filter(g => g.slug !== meta.game);
+      $('game-switch').innerHTML = others.map(g =>
+        `<a href="${esc(g.path)}" style="color:var(--muted)">${esc(g.emoji || '')} ${esc(g.name)}</a>`).join(' · ');
+    }
     const [snaps, moversUsd, moversEur, buyouts, breakdown, cards] = await Promise.all([
       loadJson('data/snapshots.json'),
       loadJson('data/movers_usd.json').catch(() => []),
