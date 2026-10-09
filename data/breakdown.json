@@ -2,26 +2,26 @@
   "by_set": [
     {
       "set": "Origins",
-      "value_eur": 289.16,
-      "pct": 47.9,
+      "value_eur": 290.01,
+      "pct": 47.2,
       "variants": 317
     },
     {
       "set": "Spiritforged",
-      "value_eur": 147.22,
-      "pct": 24.4,
+      "value_eur": 147.01,
+      "pct": 23.9,
       "variants": 235
     },
     {
       "set": "Unleashed",
-      "value_eur": 100.95,
-      "pct": 16.7,
+      "value_eur": 101.6,
+      "pct": 16.5,
       "variants": 205
     },
     {
       "set": "Vendetta",
-      "value_eur": 59.09,
-      "pct": 9.8,
+      "value_eur": 68.27,
+      "pct": 11.1,
       "variants": 160
     },
     {
@@ -39,12 +39,12 @@
     {
       "set": "Vendetta | Nexus Night",
       "value_eur": 1.53,
-      "pct": 0.3,
+      "pct": 0.2,
       "variants": 6
     },
     {
       "set": "Proving Grounds",
-      "value_eur": 0.71,
+      "value_eur": 0.66,
       "pct": 0.1,
       "variants": 1
     }
@@ -52,40 +52,40 @@
   "by_rarity": [
     {
       "rarity": "Rare",
-      "value_eur": 193.79,
-      "pct": 32.1,
+      "value_eur": 194.43,
+      "pct": 31.7,
       "variants": 228
     },
     {
       "rarity": "Common",
-      "value_eur": 143.85,
-      "pct": 23.8,
+      "value_eur": 142.95,
+      "pct": 23.3,
       "variants": 364
     },
     {
       "rarity": "Uncommon",
-      "value_eur": 138.77,
-      "pct": 23.0,
+      "value_eur": 138.82,
+      "pct": 22.6,
       "variants": 306
     },
     {
       "rarity": "Epic",
-      "value_eur": 80.2,
-      "pct": 13.3,
+      "value_eur": 90.33,
+      "pct": 14.7,
       "variants": 33
     },
     {
       "rarity": "Showcase",
-      "value_eur": 46.93,
-      "pct": 7.8,
+      "value_eur": 47.43,
+      "pct": 7.7,
       "variants": 11
     }
   ],
   "surplus": {
     "variants": 492,
-    "value_eur": 175.04,
-    "sale_eur": 162.88,
-    "review": 58,
+    "value_eur": 174.99,
+    "sale_eur": 162.79,
+    "review": 59,
     "rule": {
       "base": "avg7",
       "undercut_eur": 0.01,
