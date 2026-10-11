@@ -2,26 +2,26 @@
   "by_set": [
     {
       "set": "Origins",
-      "value_eur": 289.09,
-      "pct": 47.3,
+      "value_eur": 291.23,
+      "pct": 47.6,
       "variants": 317
     },
     {
       "set": "Spiritforged",
-      "value_eur": 146.52,
-      "pct": 24.0,
+      "value_eur": 145.84,
+      "pct": 23.8,
       "variants": 235
     },
     {
       "set": "Unleashed",
-      "value_eur": 102.06,
+      "value_eur": 102.04,
       "pct": 16.7,
       "variants": 205
     },
     {
       "set": "Vendetta",
-      "value_eur": 66.42,
-      "pct": 10.9,
+      "value_eur": 66.12,
+      "pct": 10.8,
       "variants": 160
     },
     {
@@ -39,12 +39,12 @@
     {
       "set": "Vendetta | Nexus Night",
       "value_eur": 1.53,
-      "pct": 0.3,
+      "pct": 0.2,
       "variants": 6
     },
     {
       "set": "Proving Grounds",
-      "value_eur": 0.65,
+      "value_eur": 0.62,
       "pct": 0.1,
       "variants": 1
     }
@@ -52,39 +52,39 @@
   "by_rarity": [
     {
       "rarity": "Rare",
-      "value_eur": 196.55,
-      "pct": 32.2,
+      "value_eur": 196.07,
+      "pct": 32.0,
       "variants": 228
     },
     {
-      "rarity": "Common",
-      "value_eur": 138.33,
-      "pct": 22.6,
-      "variants": 364
-    },
-    {
       "rarity": "Uncommon",
-      "value_eur": 137.9,
-      "pct": 22.6,
+      "value_eur": 139.87,
+      "pct": 22.8,
       "variants": 306
     },
     {
+      "rarity": "Common",
+      "value_eur": 138.77,
+      "pct": 22.7,
+      "variants": 364
+    },
+    {
       "rarity": "Epic",
-      "value_eur": 90.3,
-      "pct": 14.8,
+      "value_eur": 89.82,
+      "pct": 14.7,
       "variants": 33
     },
     {
       "rarity": "Showcase",
-      "value_eur": 48.07,
-      "pct": 7.9,
+      "value_eur": 47.73,
+      "pct": 7.8,
       "variants": 11
     }
   ],
   "surplus": {
     "variants": 492,
-    "value_eur": 172.75,
-    "sale_eur": 160.68,
+    "value_eur": 173.38,
+    "sale_eur": 161.22,
     "review": 56,
     "rule": {
       "base": "avg7",
