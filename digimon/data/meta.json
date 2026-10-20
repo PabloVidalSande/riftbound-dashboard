@@ -1,0 +1,19 @@
+{
+  "game": "digimon",
+  "name": "Digimon Card Game",
+  "emoji": "🧡",
+  "games": [
+    {
+      "slug": "riftbound",
+      "name": "Riftbound",
+      "emoji": "🎴",
+      "path": "../"
+    },
+    {
+      "slug": "digimon",
+      "name": "Digimon Card Game",
+      "emoji": "🧡",
+      "path": "./"
+    }
+  ]
+}

@@ -1,0 +1,1524 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0d10">
+<title>Riftbound Tracker — precios de la colección</title>
+<meta name="description" content="Dashboard del valor de la colección Riftbound: precios EUR (Cardmarket) y USD (TCGplayer), histórico, movers, señales de buyout y tendencias.">
+<link rel="canonical" href="https://pablovidalsande.github.io/riftbound-dashboard/">
+<!-- Open Graph / redes sociales -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Riftbound Tracker">
+<meta property="og:title" content="Riftbound Tracker — precios de la colección">
+<meta property="og:description" content="Valor de la colección Riftbound en EUR y USD, con histórico, movers y señales de mercado. Actualizado a diario.">
+<meta property="og:url" content="https://pablovidalsande.github.io/riftbound-dashboard/">
+<meta property="og:image" content="https://pablovidalsande.github.io/riftbound-dashboard/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Riftbound Tracker — precios de la colección">
+<meta name="twitter:description" content="Valor de la colección Riftbound en EUR y USD, con histórico, movers y señales de mercado.">
+<meta name="twitter:image" content="https://pablovidalsande.github.io/riftbound-dashboard/og.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctext y='20' font-size='20'%3E%F0%9F%92%8E%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+:root {
+  --bg:        #0b0d10;
+  --bg2:       #15181d;
+  --bg3:       #1c2026;
+  --border:    #2a2f37;
+  --text:      #e6e9ee;
+  --muted:     #98a2b3;
+  --cyan:      #67e8f9;
+  --amber:     #fbbf24;
+  --green:     #4ade80;
+  --green2:    #86efac;
+  --red:       #f87171;
+  --orange:    #fb923c;
+  --purple:    #c084fc;
+  --purple2:   #a855f7;
+  --purple3:   #7c3aed;
+  --radius:    10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1040px;margin:0 auto;padding:16px 14px 60px;padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right));padding-bottom:max(60px,env(safe-area-inset-bottom))}
+/* Foco visible para navegación por teclado */
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:4px}
+a:focus-visible,button:focus-visible,[tabindex]:focus-visible,th:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+
+/* ── HEADER ── */
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap}
+.logo{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.logo span{margin-right:6px}
+.updated{font-size:12px;color:var(--muted)}
+
+/* ── SECTION ── */
+.sec{margin-bottom:24px}
+.sec-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+
+/* ── KPI HERO ── */
+.hero{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px}
+@media(min-width:480px){.hero{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:900px){.hero{grid-template-columns:repeat(7,1fr)}}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px}
+.kpi .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.kpi .val{font-size:19px;font-weight:700;letter-spacing:-.01em;white-space:nowrap}
+.kpi .sub{font-size:11px;color:var(--muted);margin-top:2px}
+.kpi.stale{background:rgba(251,191,36,.07);border-color:rgba(251,191,36,.35)}
+.kpi.stale .lbl{color:var(--amber)}
+.up{color:var(--green)}
+.dn{color:var(--red)}
+.flat{color:var(--muted)}
+
+/* ── CHART ── */
+.chart-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:24px}
+.chart-box canvas{display:block}
+
+/* ── BREAKDOWN ── */
+.breakdown-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px}
+@media(min-width:640px){.breakdown-grid{grid-template-columns:1fr 1fr}}
+.breakdown-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+.breakdown-box canvas{display:block;width:100%!important}
+
+/* ── BUYOUT SIGNALS ── */
+.signal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-bottom:24px}
+.signal-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px}
+.signal-card .s-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;gap:8px}
+.signal-card .s-name{font-size:13px;font-weight:600;line-height:1.3}
+.signal-card .s-vn{font-size:11px;font-family:ui-monospace,monospace;color:var(--muted);margin-top:1px}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}
+.badge-confirmed{background:var(--purple3);color:#fff}
+.badge-likely{background:var(--purple2);color:#fff}
+.badge-watch{background:#92400e;color:var(--amber)}
+.badge-strong-up{background:#14532d;color:var(--green)}
+.badge-up{background:#1a3a25;color:var(--green2)}
+.badge-strong-dn{background:#450a0a;color:var(--red)}
+.badge-dn{background:#3a1a1a;color:var(--orange)}
+.badge-sale{background:#3b2a12;color:var(--amber);margin-left:6px;vertical-align:middle}
+.badge-review{background:#450a0a;color:var(--red)}
+.badge-ok{background:#14532d;color:var(--green)}
+.badge-noprice{background:var(--bg2);color:var(--muted);border:1px solid var(--border)}
+.hero.sob{grid-template-columns:repeat(2,1fr);margin-bottom:12px}
+@media(min-width:640px){.hero.sob{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}}
+.sob-rule{font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.5}
+.sob-rule b{color:var(--text)}
+.signal-card .s-meta{display:flex;gap:14px;font-size:12px;color:var(--muted)}
+.signal-card .s-meta span{white-space:nowrap}
+.s-prices{display:flex;gap:16px;margin-top:6px;font-size:12px}
+.s-prices .p-eur{color:var(--amber)}
+.s-prices .p-usd{color:var(--cyan)}
+.s-prices .p-pct{}
+
+/* ── MOVERS TABS ── */
+.tabs{display:flex;gap:2px;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:0}
+.tab-btn{background:none;border:none;color:var(--muted);font-size:13px;font-weight:500;padding:7px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.movers-grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:640px){.movers-grid{grid-template-columns:1fr 1fr}}
+.movers-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px}
+.movers-box .m-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.mover-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.mover-row:last-child{border-bottom:none}
+.mover-row .m-card{overflow:hidden}
+.mover-row .m-name{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mover-row .m-vn{font-family:ui-monospace,monospace;font-size:11px;color:var(--muted)}
+.mover-row .m-price{font-size:12px;color:var(--muted);white-space:nowrap}
+.mover-row .m-pct{font-weight:700;min-width:52px;text-align:right;white-space:nowrap}
+.empty{color:var(--muted);font-size:13px;padding:8px 0}
+
+/* ── CARDS TABLE ── */
+.table-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:10px;flex-wrap:wrap}
+.search-input{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;padding:6px 10px;outline:none;width:220px}
+.search-input:focus{border-color:var(--cyan)}
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{background:var(--bg3)}
+th{padding:9px 10px;text-align:left;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:var(--text)}
+th.sort-asc::after{content:" ↑"}
+th.sort-desc::after{content:" ↓"}
+td{padding:8px 10px;border-top:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:var(--bg3)}
+.t-vn{font-family:ui-monospace,monospace;font-size:11px;color:var(--muted)}
+.t-name{font-weight:500}
+.momentum-cell{border-radius:4px;padding:2px 7px;font-size:11px;font-weight:600;display:inline-block;white-space:nowrap}
+.mom-su{background:#14532d;color:var(--green)}
+.mom-u{background:#1a3a25;color:var(--green2)}
+.mom-s{background:var(--bg3);color:var(--muted)}
+.mom-d{background:#3a1a1a;color:var(--orange)}
+.mom-sd{background:#450a0a;color:var(--red)}
+.buyout-pill{font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;white-space:nowrap;text-transform:uppercase}
+.pagination{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;font-size:13px}
+.pg-btn{background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13px}
+.pg-btn:disabled{color:var(--muted);cursor:default}
+.pg-btn:not(:disabled):hover{border-color:var(--cyan);color:var(--cyan)}
+.pg-info{color:var(--muted);min-width:90px;text-align:center}
+
+/* ── FILTER SELECTS ── */
+.filter-select{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;padding:6px 8px;outline:none}
+.filter-select:focus{border-color:var(--cyan)}
+.toolbar-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* ── CARD MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);max-width:560px;width:100%;padding:18px 20px;position:relative}
+.modal-close{position:absolute;top:10px;right:12px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1}
+.modal-close:hover{color:var(--text)}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:2px;padding-right:28px}
+.modal-sub{font-size:12px;color:var(--muted);margin-bottom:10px}
+.modal-stats{display:flex;gap:18px;font-size:13px;margin-bottom:12px;flex-wrap:wrap}
+.modal-chart-wrap{height:200px;position:relative}
+tbody tr{cursor:pointer}
+
+/* ── FOOTER ── */
+footer{margin-top:32px;text-align:center;font-size:11px;color:var(--muted);line-height:1.8}
+
+/* ── TREEMAP ── */
+.treemap-wrap{position:relative;width:100%;height:300px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.tm-tile{position:absolute;overflow:hidden;border:1px solid rgba(11,13,16,.65);cursor:pointer;transition:filter .12s}
+.tm-tile:hover,.tm-tile:focus-visible{filter:brightness(1.18);z-index:2;outline:none}
+.tm-tile .tm-label{position:absolute;top:4px;left:6px;right:4px;font-size:11px;font-weight:600;color:#0b0d10;line-height:1.15;pointer-events:none}
+.tm-tile .tm-val{position:absolute;bottom:4px;left:6px;font-size:10px;color:rgba(11,13,16,.8);pointer-events:none}
+.viz-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:8px;align-items:center}
+.viz-legend .sw{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+
+/* ── HEATMAP ── */
+.heatmap-wrap{overflow-x:auto;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px}
+table.heatmap{border-collapse:collapse;font-size:12px;width:100%}
+table.heatmap th,table.heatmap td{padding:7px 9px;text-align:center;white-space:nowrap}
+table.heatmap thead th{color:var(--muted);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.04em}
+table.heatmap tbody th{text-align:right;color:var(--text);font-weight:600;font-size:11px}
+table.heatmap td.cell{border-radius:5px;font-weight:600;color:#0b0d10;cursor:default}
+table.heatmap td.empty{color:var(--border)}
+
+/* ── COMPARADOR ── */
+.cmp-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.cmp-chips{display:flex;gap:6px;flex-wrap:wrap}
+.cmp-chip{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:3px 6px 3px 10px;font-size:12px}
+.cmp-chip button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;line-height:1;padding:0 2px}
+.cmp-chip button:hover{color:var(--red)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.seg button{background:var(--bg2);border:none;color:var(--muted);font-size:12px;padding:5px 10px;cursor:pointer}
+.seg button.active{background:var(--bg3);color:var(--cyan)}
+
+/* ── MISC ── */
+.movers-tab-sec{margin-bottom:24px}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<noscript>
+  <div style="max-width:680px;margin:40px auto;padding:20px;background:#15181d;border:1px solid #2a2f37;border-radius:10px;text-align:center;color:#e6e9ee;font-family:system-ui,Arial,sans-serif">
+    <h1 style="font-size:18px;margin-bottom:8px">💎 Riftbound Tracker</h1>
+    <p style="color:#98a2b3;font-size:14px">Este panel necesita JavaScript para mostrar los gráficos y las tablas de precios. Actívalo y recarga la página.</p>
+  </div>
+</noscript>
+<div class="wrap">
+
+  <header>
+    <div class="logo"><span id="logo-emoji">💎</span><span id="logo-name">Riftbound Tracker</span><span id="game-switch" style="margin-left:10px;font-size:12px;font-weight:400"></span></div>
+    <div class="updated" id="updated">cargando…</div>
+  </header>
+
+  <!-- ── KPIs ── -->
+  <div class="hero" id="hero">
+    <div class="kpi"><div class="lbl">Valor EUR</div><div class="val" id="kpi-eur">—</div><div class="sub">Cardmarket</div></div>
+    <div class="kpi"><div class="lbl">Valor USD</div><div class="val" id="kpi-usd">—</div><div class="sub" id="kpi-usd-sub">TCGPlayer</div></div>
+    <div class="kpi" id="kpi-delta-box"><div class="lbl">USD Δ hoy</div><div class="val" id="kpi-delta">—</div><div class="sub" id="kpi-delta-pct">—</div></div>
+    <div class="kpi" id="kpi-eur-delta-box"><div class="lbl">EUR Δ hoy</div><div class="val" id="kpi-eur-delta">—</div><div class="sub" id="kpi-eur-delta-pct">—</div></div>
+    <div class="kpi" id="kpi-eur-alerts-box"><div class="lbl">EUR Δ alertas</div><div class="val" id="kpi-eur-alerts">—</div><div class="sub">≥25 % y ≥1 €</div></div>
+    <div class="kpi"><div class="lbl">Movers USD</div><div class="val" id="kpi-movers">—</div><div class="sub">≥ ±25 %</div></div>
+    <div class="kpi"><div class="lbl">Buyout / Mom.</div><div class="val" id="kpi-buyouts" style="color:var(--purple)">—</div><div class="sub">señales activas</div></div>
+  </div>
+
+  <!-- ── HISTÓRICO ── -->
+  <div class="sec">
+    <div class="sec-title">Histórico de valor — USD (TCGPlayer) &amp; EUR (Cardmarket)</div>
+    <div class="chart-box" style="height:240px;position:relative">
+      <canvas id="chart-history"></canvas>
+    </div>
+  </div>
+
+  <!-- ── SOBRANTES A LA VENTA ── -->
+  <div class="sec" id="sec-sobrantes" style="display:none">
+    <div class="table-toolbar">
+      <div class="sec-title" style="margin-bottom:0">📙 Sobrantes a la venta</div>
+      <div class="toolbar-controls">
+        <select id="sob-set" class="filter-select" aria-label="Set de los sobrantes"><option value="">Todos los sets</option></select>
+        <select id="sob-state" class="filter-select" aria-label="Estado del precio">
+          <option value="">Todos los precios</option>
+          <option value="review">Sólo "Revisar"</option>
+          <option value="ok">Sólo OK</option>
+          <option value="misaligned">Sólo desalineadas</option>
+        </select>
+        <input id="sob-search" class="search-input" type="text" placeholder="Buscar sobrante…">
+      </div>
+    </div>
+    <div class="hero sob" id="sob-kpis"></div>
+    <p class="sob-rule" id="sob-rule"></p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-scol="variant" tabindex="0" role="button" aria-label="Ordenar por variante">Variante</th>
+            <th data-scol="name" tabindex="0" role="button" aria-label="Ordenar por carta">Carta</th>
+            <th data-scol="set" tabindex="0" role="button" aria-label="Ordenar por set">Set</th>
+            <th data-scol="variant_label" tabindex="0" role="button" aria-label="Ordenar por acabado">Acabado</th>
+            <th data-scol="rarity" tabindex="0" role="button" aria-label="Ordenar por rareza">Rareza</th>
+            <th data-scol="eur_price" tabindex="0" role="button" aria-label="Ordenar por precio Cardmarket">Cardmarket €</th>
+            <th data-scol="sale_price" tabindex="0" role="button" aria-label="Ordenar por precio de venta" class="sort-desc" aria-sort="descending">Vender a €</th>
+            <th data-scol="listed_price" tabindex="0" role="button" aria-label="Ordenar por precio listado en Cardmarket" id="sob-th-listed" title="Precio al que está listada en Cardmarket según la última foto de PowerTools">En Cardmarket €</th>
+            <th data-scol="eur_pct_7d" tabindex="0" role="button" aria-label="Ordenar por variación EUR 7 días">7d %</th>
+            <th data-scol="sale_flag" tabindex="0" role="button" aria-label="Ordenar por estado">Estado</th>
+          </tr>
+        </thead>
+        <tbody id="sob-tbody"></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="sob-pagination"></div>
+  </div>
+
+  <!-- ── BUYOUT / MOMENTUM ── -->
+  <div class="sec" id="sec-buyouts" style="display:none">
+    <div class="sec-title">Señales de Buyout &amp; Momentum</div>
+    <div class="signal-grid" id="buyouts-grid"></div>
+  </div>
+
+  <!-- ── MOVERS ── -->
+  <div class="movers-tab-sec">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="usd">Movers USD</button>
+      <button class="tab-btn"        data-tab="eur">Alertas EUR</button>
+      <button class="tab-btn"        data-tab="7d">Top 7d</button>
+      <button class="tab-btn"        data-tab="30d">Top 30d</button>
+    </div>
+    <div id="tab-usd" class="tab-panel active">
+      <div class="movers-grid">
+        <div class="movers-box"><div class="m-title" style="color:var(--green)">▲ Subidas USD</div><div id="ups-usd"></div></div>
+        <div class="movers-box"><div class="m-title" style="color:var(--red)">▼ Bajadas USD</div><div id="dns-usd"></div></div>
+      </div>
+    </div>
+    <div id="tab-eur" class="tab-panel">
+      <div class="movers-grid">
+        <div class="movers-box"><div class="m-title" style="color:var(--green)">▲ Subidas EUR</div><div id="ups-eur"></div></div>
+        <div class="movers-box"><div class="m-title" style="color:var(--red)">▼ Bajadas EUR</div><div id="dns-eur"></div></div>
+      </div>
+    </div>
+    <div id="tab-7d" class="tab-panel">
+      <div class="movers-grid">
+        <div class="movers-box"><div class="m-title" style="color:var(--green)">▲ Top subidas 7d (EUR)</div><div id="ups-7d"></div></div>
+        <div class="movers-box"><div class="m-title" style="color:var(--red)">▼ Top bajadas 7d (EUR)</div><div id="dns-7d"></div></div>
+      </div>
+    </div>
+    <div id="tab-30d" class="tab-panel">
+      <div class="movers-grid">
+        <div class="movers-box"><div class="m-title" style="color:var(--green)">▲ Top subidas 30d (EUR)</div><div id="ups-30d"></div></div>
+        <div class="movers-box"><div class="m-title" style="color:var(--red)">▼ Top bajadas 30d (EUR)</div><div id="dns-30d"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DESGLOSE ── -->
+  <div class="sec" id="sec-breakdown" style="display:none">
+    <div class="sec-title">Desglose de la colección</div>
+    <div class="breakdown-grid">
+      <div class="breakdown-box">
+        <div class="sec-title" style="margin-bottom:10px">Por set</div>
+        <canvas id="chart-set" height="160"></canvas>
+      </div>
+      <div class="breakdown-box">
+        <div class="sec-title" style="margin-bottom:10px">Por rareza</div>
+        <canvas id="chart-rarity" height="160"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TREEMAP ── -->
+  <div class="sec" id="sec-treemap" style="display:none">
+    <div class="sec-title">Mapa de cartas — tamaño = precio unitario · color = variación 30d</div>
+    <div class="treemap-wrap" id="treemap"></div>
+    <div class="viz-legend">
+      <span><span class="sw" style="background:#f87171"></span>baja fuerte</span>
+      <span><span class="sw" style="background:#3a1a1a"></span>baja</span>
+      <span><span class="sw" style="background:#2a2f37"></span>estable</span>
+      <span><span class="sw" style="background:#1a3a25"></span>sube</span>
+      <span><span class="sw" style="background:#4ade80"></span>sube fuerte</span>
+      <span style="margin-left:auto">Top 60 cartas por precio · toca una para ver detalle</span>
+    </div>
+  </div>
+
+  <!-- ── HEATMAP ── -->
+  <div class="sec" id="sec-heatmap" style="display:none">
+    <div class="table-toolbar">
+      <div class="sec-title" style="margin-bottom:0">Heatmap de variación por set y rareza</div>
+      <div class="seg" id="heatmap-period" role="group" aria-label="Periodo del heatmap">
+        <button data-p="eur_pct_7d" class="active">7d</button>
+        <button data-p="eur_pct_30d">30d</button>
+      </div>
+    </div>
+    <div class="heatmap-wrap"><div id="heatmap"></div></div>
+    <div class="viz-legend"><span>Color = variación media EUR · número = nº de cartas · celda vacía = sin datos</span></div>
+  </div>
+
+  <!-- ── COMPARADOR ── -->
+  <div class="sec" id="sec-compare" style="display:none">
+    <div class="sec-title">Comparador de cartas — evolución de precio (30 días)</div>
+    <div class="cmp-controls">
+      <input id="cmp-search" class="search-input" type="text" list="cmp-list" placeholder="Añade una carta (nombre o variante)…">
+      <datalist id="cmp-list"></datalist>
+      <div class="seg" id="cmp-mode" role="group" aria-label="Modo del comparador">
+        <button data-m="abs" class="active">€ absoluto</button>
+        <button data-m="idx">Índice 100</button>
+      </div>
+    </div>
+    <div class="cmp-chips" id="cmp-chips" style="margin-bottom:10px"></div>
+    <div class="chart-box" style="height:240px;position:relative;margin-bottom:0"><canvas id="cmp-chart"></canvas></div>
+    <div class="viz-legend"><span id="cmp-hint">Añade hasta 4 cartas para comparar su evolución. "Índice 100" normaliza para comparar tendencias.</span></div>
+  </div>
+
+  <!-- ── TABLA DE CARTAS ── -->
+  <div class="sec" id="sec-cards" style="display:none">
+    <div class="table-toolbar">
+      <div class="sec-title" style="margin-bottom:0">Cartas de la colección</div>
+      <div class="toolbar-controls">
+        <select id="filter-pool" class="filter-select" aria-label="Colección o sobrantes"><option value="">Toda la colección</option><option value="surplus">Sólo sobrantes (a la venta)</option></select>
+        <select id="filter-set" class="filter-select"><option value="">Todos los sets</option></select>
+        <select id="filter-rarity" class="filter-select"><option value="">Todas las rarezas</option></select>
+        <input id="card-search" class="search-input" type="text" placeholder="Buscar carta o variante…">
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-col="variant" tabindex="0" role="button" aria-label="Ordenar por variante">Variante</th>
+            <th data-col="name" tabindex="0" role="button" aria-label="Ordenar por carta">Carta</th>
+            <th data-col="set" tabindex="0" role="button" aria-label="Ordenar por set">Set</th>
+            <th data-col="rarity" tabindex="0" role="button" aria-label="Ordenar por rareza">Rareza</th>
+            <th data-col="eur_price" tabindex="0" role="button" aria-label="Ordenar por precio EUR" class="sort-desc" aria-sort="descending">EUR €</th>
+            <th title="Precio EUR últimos 30 días" style="cursor:default">30d</th>
+            <th data-col="usd_price" tabindex="0" role="button" aria-label="Ordenar por precio USD">USD $</th>
+            <th data-col="pct_7d" tabindex="0" role="button" aria-label="Ordenar por variación 7 días">7d %</th>
+            <th data-col="momentum" tabindex="0" role="button" aria-label="Ordenar por momentum">Momentum</th>
+            <th data-col="buyout_level" tabindex="0" role="button" aria-label="Ordenar por buyout">Buyout</th>
+          </tr>
+        </thead>
+        <tbody id="cards-tbody"></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+  <footer>
+    Actualizado diariamente por GitHub Actions.
+    Datos: TCGPlayer market price (USD) via <a href="https://tcgcsv.com" target="_blank" rel="noopener">TCGCSV</a> ·
+    EUR via <a href="https://www.cardmarket.com" target="_blank" rel="noopener">Cardmarket</a> S3 ·
+    Tendencias via <a href="https://magicalmeta.ink/riftbound" target="_blank" rel="noopener">magicalmeta.ink</a>.
+    <br><a href="https://github.com/PabloVidalSande/riftbound-dashboard" target="_blank" rel="noopener">Repo</a>
+  </footer>
+
+</div><!-- .wrap -->
+
+<!-- ── MODAL DETALLE CARTA ── -->
+<div class="modal-overlay" id="card-modal">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal-close" id="modal-close" aria-label="Cerrar">×</button>
+    <div class="modal-title" id="modal-title">—</div>
+    <div class="modal-sub" id="modal-sub">—</div>
+    <div class="modal-stats" id="modal-stats"></div>
+    <div class="modal-chart-wrap"><canvas id="modal-chart"></canvas></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ─── utils ─────────────────────────────────────────────────────────────── */
+const $ = id => document.getElementById(id);
+const fmtUsd = n => n == null ? '—' : '$' + Number(n).toLocaleString('es-ES', {minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtEur = n => n == null ? '—' : Number(n).toLocaleString('es-ES', {minimumFractionDigits:2,maximumFractionDigits:2}) + ' €';
+const fmtPct = n => n == null ? '—' : (n >= 0 ? '+' : '') + Number(n).toFixed(1) + '%';
+
+// Escapa texto antes de interpolarlo en innerHTML / atributos (los nombres de
+// carta pueden traer comillas o símbolos: p.ej. "Kai'Sa").
+const ESC = { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' };
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ESC[c]);
+
+const REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (typeof Chart !== 'undefined' && REDUCED_MOTION) Chart.defaults.animation = false;
+
+// Cache-busting por DÍA (no por petición): online se revalida a diario y las
+// revisitas dentro del mismo día sirven de caché del navegador / service worker.
+const DAY_KEY = Math.floor(Date.now() / 86400000);
+async function loadJson(path) {
+  const r = await fetch(path + '?d=' + DAY_KEY);
+  if (!r.ok) throw new Error(path + ' → ' + r.status);
+  return r.json();
+}
+
+function cls(el, ...names) { names.forEach(n => n && el.classList.add(n)); }
+
+/* ─── KPI hero ───────────────────────────────────────────────────────────── */
+function renderHero(snaps, moversUsd, moversEur, buyouts) {
+  const last = snaps[snaps.length - 1];
+  // Las series USD y EUR pueden no compartir todas las fechas: usar el último
+  // snapshot que tenga cada valor.
+  const snapsUsd = snaps.filter(s => s.total_usd != null);
+  const lastUsd  = snapsUsd[snapsUsd.length - 1] || null;
+  const prevUsd  = snapsUsd.length >= 2 ? snapsUsd[snapsUsd.length - 2] : null;
+
+  // USD
+  $('kpi-usd').textContent = fmtUsd(lastUsd ? lastUsd.total_usd : null);
+  const usdDate = lastUsd ? lastUsd.date : last.date;
+  const ageMs  = usdDate ? Date.now() - new Date(usdDate).getTime() : 0;
+  const ageDays= Math.floor(ageMs / 86400000);
+  if (ageDays >= 2) {
+    document.querySelector('#kpi-usd').closest('.kpi').classList.add('stale');
+    $('kpi-usd-sub').textContent = `⚠ hace ${ageDays} días`;
+  }
+
+  // USD delta
+  if (lastUsd && prevUsd && prevUsd.total_usd) {
+    const d   = lastUsd.total_usd - prevUsd.total_usd;
+    const pct = d / prevUsd.total_usd * 100;
+    $('kpi-delta').textContent = (d >= 0 ? '+$' : '-$') + Math.abs(d).toLocaleString('es-ES', {minimumFractionDigits:2,maximumFractionDigits:2});
+    $('kpi-delta').className   = 'val ' + (d > 0 ? 'up' : d < 0 ? 'dn' : 'flat');
+    $('kpi-delta-pct').textContent = fmtPct(pct);
+  }
+
+  // EUR
+  const snapsEurAll = snaps.filter(s => s.total_eur != null);
+  const lastEur = snapsEurAll[snapsEurAll.length - 1] || null;
+  if (lastEur) {
+    $('kpi-eur').textContent = fmtEur(lastEur.total_eur);
+    $('kpi-eur').style.color = 'var(--amber)';
+  }
+
+  // EUR delta hoy
+  const snapsEur = snaps.filter(s => s.total_eur != null);
+  if (snapsEur.length >= 2) {
+    const lastE = snapsEur[snapsEur.length - 1];
+    const prevE = snapsEur[snapsEur.length - 2];
+    const dEur  = lastE.total_eur - prevE.total_eur;
+    const pEur  = dEur / prevE.total_eur * 100;
+    $('kpi-eur-delta').textContent = (dEur >= 0 ? '+' : '-') + Math.abs(dEur).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €';
+    $('kpi-eur-delta').className   = 'val ' + (dEur > 0 ? 'up' : dEur < 0 ? 'dn' : 'flat');
+    $('kpi-eur-delta').style.color = '';
+    $('kpi-eur-delta-pct').textContent = fmtPct(pEur);
+  }
+
+  // EUR alerts
+  $('kpi-eur-alerts').textContent = moversEur.length;
+  if (moversEur.length > 0) $('kpi-eur-alerts').classList.add('up');
+
+  // USD movers
+  $('kpi-movers').textContent = moversUsd.length;
+  if (moversUsd.length > 0) $('kpi-movers').style.color = 'var(--orange)';
+
+  // Buyout/momentum
+  $('kpi-buyouts').textContent = buyouts.length;
+
+  // updated label
+  $('updated').textContent = 'Snapshot ' + (last.date || '—');
+}
+
+/* ─── Eventos (salida de sets) marcados en el histórico ──────────────────── */
+const EVENTS = [
+  // Fechas APROXIMADAS de salida de sets — ajusta o añade aquí.
+  // Solo se dibujan las que caen dentro del rango del gráfico.
+  { date: '2026-05-12', label: 'Unleashed' },
+];
+const eventLinePlugin = {
+  id: 'eventLines',
+  afterDatasetsDraw(chart) {
+    const cfg = chart.options.plugins.eventLines;
+    if (!cfg || !cfg.events || !cfg.events.length) return;
+    const { ctx, chartArea: { top, bottom }, scales: { x } } = chart;
+    const labels = chart.data.labels;
+    cfg.events.forEach(ev => {
+      const idx = labels.findIndex(d => d >= ev.date);
+      if (idx < 0) return;
+      const px = x.getPixelForValue(idx);
+      if (px == null || isNaN(px)) return;
+      ctx.save();
+      ctx.strokeStyle = 'rgba(192,132,252,.65)';
+      ctx.setLineDash([4, 3]); ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bottom); ctx.stroke();
+      ctx.setLineDash([]); ctx.fillStyle = '#c084fc';
+      ctx.font = '10px -apple-system,sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText(ev.label, px + 3, top + 10);
+      ctx.restore();
+    });
+  }
+};
+
+/* ─── Historical chart ───────────────────────────────────────────────────── */
+function renderHistory(snaps) {
+  const ctx = $('chart-history');
+  const hasEur = snaps.some(s => s.total_eur != null);
+  const first = snaps[0].date, lastD = snaps[snaps.length - 1].date;
+  const evs = EVENTS.filter(e => e.date >= first && e.date <= lastD);
+  const pr = snaps.length > 30 ? 0 : 3;
+  const datasets = [
+    {
+      label: 'USD',
+      data: snaps.map(s => s.total_usd),
+      borderColor: '#67e8f9',
+      backgroundColor: 'rgba(103,232,249,0.07)',
+      borderWidth: 2,
+      fill: true,
+      tension: 0.3,
+      pointRadius: pr,
+      pointHoverRadius: 5,
+      yAxisID: 'y',
+    },
+  ];
+  if (hasEur) {
+    datasets.push({
+      label: 'EUR',
+      data: snaps.map(s => s.total_eur ?? null),
+      borderColor: '#fbbf24',
+      backgroundColor: 'rgba(251,191,36,0.05)',
+      borderWidth: 2,
+      fill: false,
+      tension: 0.3,
+      pointRadius: pr,
+      pointHoverRadius: 5,
+      spanGaps: true,
+      yAxisID: 'y2',
+    });
+  }
+  new Chart(ctx, {
+    type: 'line',
+    data: { labels: snaps.map(s => s.date), datasets },
+    plugins: [eventLinePlugin],
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        eventLines: { events: evs },
+        legend: { display: hasEur, labels: { color: '#98a2b3', boxWidth: 12, font: { size: 11 } } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.label === 'EUR'
+              ? ' EUR ' + fmtEur(ctx.parsed.y)
+              : ' USD ' + fmtUsd(ctx.parsed.y),
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#98a2b3', maxTicksLimit: 7 }, grid: { color: '#1c2026' } },
+        y: { ticks: { color: '#67e8f9', callback: v => '$' + v }, grid: { color: '#1c2026' } },
+        y2: {
+          display: hasEur,
+          position: 'right',
+          ticks: { color: '#fbbf24', callback: v => '€' + v },
+          grid: { drawOnChartArea: false },
+        },
+      }
+    }
+  });
+}
+
+/* ─── Buyout / momentum signals ──────────────────────────────────────────── */
+function badgeClass(b) {
+  if (b.buyout_level === 'confirmed')      return 'badge-confirmed';
+  if (b.buyout_level === 'likely')         return 'badge-likely';
+  if (b.buyout_level === 'watch')          return 'badge-watch';
+  const m = b.momentum || '';
+  if (m === 'Strong Upward')               return 'badge-strong-up';
+  if (m === 'Upward')                      return 'badge-up';
+  if (m === 'Strong Downward')             return 'badge-strong-dn';
+  if (m === 'Downward')                    return 'badge-dn';
+  return '';
+}
+function badgeLabel(b) {
+  if (b.buyout_level === 'confirmed') return '🚨 BUYOUT CONFIRMADO';
+  if (b.buyout_level === 'likely')    return '⚡ BUYOUT PROBABLE';
+  if (b.buyout_level === 'watch')     return '👀 BUYOUT VIGILAR';
+  const m = b.momentum || '';
+  if (m === 'Strong Upward')          return '↑↑ ALZA FUERTE';
+  if (m === 'Upward')                 return '↑ ALZA';
+  if (m === 'Strong Downward')        return '↓↓ BAJADA FUERTE';
+  if (m === 'Downward')               return '↓ BAJADA';
+  return b.alert_type || '—';
+}
+
+function renderBuyouts(buyouts) {
+  if (!buyouts.length) return;
+  $('sec-buyouts').style.display = '';
+  const grid = $('buyouts-grid');
+  grid.innerHTML = buyouts.slice(0, 18).map(b => {
+    const p7 = b.usd_pct_7d != null ? fmtPct(b.usd_pct_7d) : '—';
+    const clr7 = b.usd_pct_7d > 0 ? 'up' : b.usd_pct_7d < 0 ? 'dn' : '';
+    const eur  = b.eur_price  != null ? fmtEur(b.eur_price)  : '—';
+    const usd  = b.usd_price  != null ? fmtUsd(b.usd_price)  : '—';
+    const link = b.url ? `<a href="${esc(b.url)}" target="_blank" rel="noopener">↗</a>` : '';
+    return `<div class="signal-card">
+      <div class="s-head">
+        <div>
+          <div class="s-name">${esc(b.name || b.variant)} ${link}</div>
+          <div class="s-vn">${esc(b.variant)} · ${esc(b.set)} · ${esc(b.rarity)}</div>
+        </div>
+        <span class="badge ${badgeClass(b)}">${badgeLabel(b)}</span>
+      </div>
+      <div class="s-prices">
+        <span class="p-eur">EUR ${eur}</span>
+        <span class="p-usd">USD ${usd}</span>
+        <span class="p-pct ${clr7}">7d ${p7}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ─── Movers ─────────────────────────────────────────────────────────────── */
+function moverRowUsd(m) {
+  const name  = esc(m.name || m.variant_number);
+  const clr   = m.pct >= 0 ? 'up' : 'dn';
+  return `<div class="mover-row">
+    <div class="m-card">
+      <div class="m-name" title="${esc(m.name)}">${name}</div>
+      <div class="m-vn">${esc(m.variant_number)}</div>
+    </div>
+    <div class="m-price">${fmtUsd(m.old_usd)} → ${fmtUsd(m.new_usd)}</div>
+    <div class="m-pct ${clr}">${fmtPct(m.pct)}</div>
+  </div>`;
+}
+function moverRowEur(m) {
+  const clr = m.delta_pct >= 0 ? 'up' : 'dn';
+  const link = m.url ? `<a href="${esc(m.url)}" target="_blank" rel="noopener" style="font-size:11px">↗</a>` : '';
+  return `<div class="mover-row">
+    <div class="m-card">
+      <div class="m-name" title="${esc(m.name)}">${esc(m.name || m.variant)} ${link}</div>
+      <div class="m-vn">${esc(m.variant)}</div>
+    </div>
+    <div class="m-price">${fmtEur(m.prev_price)} → ${fmtEur(m.new_price)}</div>
+    <div class="m-pct ${clr}">${fmtPct(m.delta_pct)}</div>
+  </div>`;
+}
+
+function renderMovers(moversUsd, moversEur) {
+  const ups_u = moversUsd.filter(m => m.pct >= 0).slice(0, 10);
+  const dns_u = moversUsd.filter(m => m.pct < 0).slice(0, 10);
+  const ups_e = moversEur.filter(m => m.delta_pct >= 0).slice(0, 10);
+  const dns_e = moversEur.filter(m => m.delta_pct < 0).slice(0, 10);
+
+  $('ups-usd').innerHTML = ups_u.length ? ups_u.map(moverRowUsd).join('') : '<div class="empty">Sin subidas hoy.</div>';
+  $('dns-usd').innerHTML = dns_u.length ? dns_u.map(moverRowUsd).join('') : '<div class="empty">Sin bajadas hoy.</div>';
+  $('ups-eur').innerHTML = ups_e.length ? ups_e.map(moverRowEur).join('') : '<div class="empty">Sin alertas EUR de subida.</div>';
+  $('dns-eur').innerHTML = dns_e.length ? dns_e.map(moverRowEur).join('') : '<div class="empty">Sin alertas EUR de bajada.</div>';
+}
+
+/* ─── Top trends 7d / 30d (EUR, desde cards.json) ────────────────────────── */
+function trendRow(c, pct) {
+  const clr  = pct >= 0 ? 'up' : 'dn';
+  const link = c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener" style="font-size:11px">↗</a>` : '';
+  return `<div class="mover-row">
+    <div class="m-card">
+      <div class="m-name" title="${esc(c.name)}">${esc(c.name || c.variant)} ${link}</div>
+      <div class="m-vn">${esc(c.variant)}</div>
+    </div>
+    <div class="m-price">${fmtEur(c.eur_price)}</div>
+    <div class="m-pct ${clr}">${fmtPct(pct)}</div>
+  </div>`;
+}
+
+function renderTopTrends(cards) {
+  // Solo cartas con precio relevante (≥1 €) para evitar ruido de céntimos
+  const eligible = cards.filter(c => (c.eur_price || 0) >= 1);
+  for (const [key, ids] of [['eur_pct_7d', ['ups-7d', 'dns-7d']], ['eur_pct_30d', ['ups-30d', 'dns-30d']]]) {
+    const withPct = eligible.filter(c => c[key] != null && c[key] !== 0);
+    const ups = withPct.filter(c => c[key] > 0).sort((a, b) => b[key] - a[key]).slice(0, 10);
+    const dns = withPct.filter(c => c[key] < 0).sort((a, b) => a[key] - b[key]).slice(0, 10);
+    $(ids[0]).innerHTML = ups.length ? ups.map(c => trendRow(c, c[key])).join('') : '<div class="empty">Sin subidas en el periodo.</div>';
+    $(ids[1]).innerHTML = dns.length ? dns.map(c => trendRow(c, c[key])).join('') : '<div class="empty">Sin bajadas en el periodo.</div>';
+  }
+}
+
+/* ─── Tabs ───────────────────────────────────────────────────────────────── */
+function initTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      $('tab-' + tab).classList.add('active');
+    });
+  });
+}
+
+/* ─── Breakdown charts ───────────────────────────────────────────────────── */
+const SET_COLORS = {
+  'Origins':     '#67e8f9',
+  'Spiritforged':'#a78bfa',
+  'Unleashed':   '#fbbf24',
+};
+const RARITY_COLORS = {
+  'Legendary': '#fbbf24',
+  'Epic':      '#c084fc',
+  'Rare':      '#67e8f9',
+  'Uncommon':  '#4ade80',
+  'Common':    '#94a3b8',
+};
+const defaultColors = ['#67e8f9','#a78bfa','#fbbf24','#4ade80','#f87171','#fb923c','#94a3b8'];
+
+function hbarChart(canvasId, labels, values, colors) {
+  const ctx = $(canvasId);
+  const pcts = values.map(v => {
+    const t = values.reduce((a,b) => a + b, 0) || 1;
+    return Math.round(v / t * 100 * 10) / 10;
+  });
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors,
+        borderRadius: 4,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const pct = pcts[ctx.dataIndex];
+              return ` ${fmtEur(ctx.parsed.x)}  (${pct}%)`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#98a2b3', callback: v => '€' + v }, grid: { color: '#1c2026' } },
+        y: { ticks: { color: '#e6e9ee', font: { size: 12 } }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+function renderBreakdown(bd) {
+  if (!bd) return;
+  $('sec-breakdown').style.display = '';
+
+  const setLabels  = bd.by_set.map(s => s.set);
+  const setVals    = bd.by_set.map(s => s.value_eur);
+  const setColors  = setLabels.map((l, i) => SET_COLORS[l] || defaultColors[i % defaultColors.length]);
+
+  const rarLabels  = bd.by_rarity.map(r => r.rarity);
+  const rarVals    = bd.by_rarity.map(r => r.value_eur);
+  const rarColors  = rarLabels.map((l, i) => RARITY_COLORS[l] || defaultColors[i % defaultColors.length]);
+
+  hbarChart('chart-set',    setLabels, setVals, setColors);
+  hbarChart('chart-rarity', rarLabels, rarVals, rarColors);
+
+  // Sobrantes: agregado (sin cantidades por carta), como el valor total
+  const sp = bd.surplus;
+  if (sp && sp.variants) {
+    const note = document.createElement('div');
+    note.className = 'viz-legend';
+    note.id = 'surplus-note';
+    note.textContent = `📙 A la venta: ${sp.variants} cartas con copias de sobra · ${fmtEur(sp.value_eur)} a precio actual` +
+      (sp.sale_eur != null ? ` · ${fmtEur(sp.sale_eur)} a precio sugerido` : '') +
+      ' — detalle y precios de venta en la sección "Sobrantes a la venta".';
+    $('sec-breakdown').appendChild(note);
+  }
+}
+
+/* ─── Cards table ────────────────────────────────────────────────────────── */
+let allCards = [], filteredCards = [];
+let sortCol = 'eur_price', sortDir = -1;
+let page = 0;
+const PAGE = 50;
+
+const MOMENTUM_CLASS = {
+  'Strong Upward':   'mom-su',
+  'Upward':          'mom-u',
+  'Stable':          'mom-s',
+  'Downward':        'mom-d',
+  'Strong Downward': 'mom-sd',
+};
+const MOMENTUM_LABEL = {
+  'Strong Upward':   '↑↑ Fuerte alza',
+  'Upward':          '↑ Alza',
+  'Stable':          '─ Estable',
+  'Downward':        '↓ Bajada',
+  'Strong Downward': '↓↓ Fuerte bajada',
+};
+
+/* Sparkline SVG inline: serie de precios EUR de los últimos 30 días */
+function sparkline(prices) {
+  if (!Array.isArray(prices) || prices.length < 2) return '<span class="flat">—</span>';
+  const w = 64, h = 20, n = prices.length;
+  const min = Math.min(...prices), max = Math.max(...prices);
+  const range = (max - min) || 1;
+  const pts = prices.map((p, i) =>
+    `${(i / (n - 1) * w).toFixed(1)},${(h - 2 - (p - min) / range * (h - 4)).toFixed(1)}`
+  ).join(' ');
+  const first = prices[0], last = prices[n - 1];
+  const color = last > first ? 'var(--green)' : last < first ? 'var(--red)' : 'var(--muted)';
+  const delta = first ? ((last - first) / first * 100) : 0;
+  const title = `${fmtEur(first)} → ${fmtEur(last)} (${fmtPct(delta)}) · ${n} días`;
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="display:block"><title>${title}</title><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
+}
+
+function buyoutBadge(lvl) {
+  if (!lvl || lvl === 'none') return '';
+  const cls  = lvl === 'confirmed' ? 'badge-confirmed' : lvl === 'likely' ? 'badge-likely' : 'badge-watch';
+  const lbl  = {confirmed:'Confirmado', likely:'Probable', watch:'Vigilar'}[lvl] || lvl;
+  return `<span class="buyout-pill ${cls}">${lbl}</span>`;
+}
+
+function renderTable() {
+  const tbody  = $('cards-tbody');
+  const start  = page * PAGE;
+  const slice  = filteredCards.slice(start, start + PAGE);
+  tbody.innerHTML = slice.map(c => {
+    const mClass = c.momentum ? MOMENTUM_CLASS[c.momentum] || 'mom-s' : '';
+    const mLabel = c.momentum ? MOMENTUM_LABEL[c.momentum] || c.momentum : '—';
+    const link   = c.url ? ` <a href="${esc(c.url)}" target="_blank" rel="noopener" style="font-size:10px;color:var(--muted)">↗</a>` : '';
+    const sale   = c.surplus ? `<span class="badge badge-sale" title="Copias de sobra a la venta${c.sale_price != null ? ' · ' + fmtEur(c.sale_price) : ''}">venta</span>` : '';
+    const p7cls  = c.pct_7d > 0 ? 'up' : c.pct_7d < 0 ? 'dn' : 'flat';
+    return `<tr data-variant="${esc(c.variant)}" tabindex="0" role="button" aria-label="Ver detalle de ${esc(c.name || c.variant)}">
+      <td class="t-vn">${esc(c.variant)}</td>
+      <td class="t-name">${esc(c.name)}${link}${sale}</td>
+      <td style="color:var(--muted)">${esc(c.set) || '—'}</td>
+      <td style="color:var(--muted)">${esc(c.rarity) || '—'}</td>
+      <td style="color:var(--amber)">${c.eur_price != null ? fmtEur(c.eur_price) : '—'}</td>
+      <td>${sparkline(c.spark)}</td>
+      <td style="color:var(--cyan)">${c.usd_price  != null ? fmtUsd(c.usd_price) : '—'}</td>
+      <td class="${p7cls}">${c.pct_7d != null ? fmtPct(c.pct_7d) : '—'}</td>
+      <td>${c.momentum ? `<span class="momentum-cell ${mClass}">${mLabel}</span>` : '—'}</td>
+      <td>${buyoutBadge(c.buyout_level)}</td>
+    </tr>`;
+  }).join('');
+
+  renderPagination();
+}
+
+function renderPagination() {
+  const total = Math.ceil(filteredCards.length / PAGE);
+  const pg = $('pagination');
+  if (total <= 1) { pg.innerHTML = ''; return; }
+  pg.innerHTML = `
+    <button class="pg-btn" id="pg-prev" ${page === 0 ? 'disabled' : ''}>‹ Ant.</button>
+    <span class="pg-info">Pág. ${page + 1} / ${total} (${filteredCards.length})</span>
+    <button class="pg-btn" id="pg-next" ${page >= total - 1 ? 'disabled' : ''}>Sig. ›</button>`;
+  $('pg-prev')?.addEventListener('click', () => { page--; renderTable(); });
+  $('pg-next')?.addEventListener('click', () => { page++; renderTable(); });
+}
+
+function sortCards() {
+  const col = sortCol;
+  const dir = sortDir;
+  filteredCards.sort((a, b) => {
+    let av = a[col], bv = b[col];
+    if (av == null) av = col === 'eur_price' || col === 'usd_price' || col === 'pct_7d' ? -Infinity : '';
+    if (bv == null) bv = col === 'eur_price' || col === 'usd_price' || col === 'pct_7d' ? -Infinity : '';
+    if (typeof av === 'string') return dir * av.localeCompare(bv);
+    return dir * (av - bv);
+  });
+}
+
+function applyFilter() {
+  const q    = $('card-search').value.trim().toLowerCase();
+  const fSet = $('filter-set').value;
+  const fRar = $('filter-rarity').value;
+  const fPool = $('filter-pool').value;
+  filteredCards = allCards.filter(c => {
+    if (fPool === 'surplus' && !c.surplus) return false;
+    if (fSet && c.set !== fSet) return false;
+    if (fRar && c.rarity !== fRar) return false;
+    if (!q) return true;
+    return (c.name    || '').toLowerCase().includes(q) ||
+           (c.variant || '').toLowerCase().includes(q) ||
+           (c.set     || '').toLowerCase().includes(q) ||
+           (c.rarity  || '').toLowerCase().includes(q);
+  });
+  sortCards();
+  page = 0;
+  renderTable();
+}
+
+function populateFilters(cards) {
+  const sets     = [...new Set(cards.map(c => c.set).filter(Boolean))].sort();
+  const rarities = [...new Set(cards.map(c => c.rarity).filter(Boolean))].sort();
+  $('filter-set').innerHTML    = '<option value="">Todos los sets</option>' +
+    sets.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
+  $('filter-rarity').innerHTML = '<option value="">Todas las rarezas</option>' +
+    rarities.map(r => `<option value="${esc(r)}">${esc(r)}</option>`).join('');
+}
+
+/* ─── Modal de detalle por carta ─────────────────────────────────────────── */
+let modalChart = null;
+let lastFocused = null;
+
+function openCardModal(c) {
+  $('modal-title').textContent = c.name || c.variant;
+  $('modal-sub').textContent   = `${c.variant} · ${c.set || '—'} · ${c.rarity || '—'}` +
+                                 (c.variant_label ? ` · ${c.variant_label}` : '');
+  const spark = Array.isArray(c.spark) ? c.spark : [];
+  let deltaHtml = '';
+  if (spark.length >= 2) {
+    const d = spark[spark.length - 1] - spark[0];
+    const pct = spark[0] ? d / spark[0] * 100 : 0;
+    deltaHtml = `<span class="${d > 0 ? 'up' : d < 0 ? 'dn' : 'flat'}">30d: ${fmtPct(pct)}</span>`;
+  }
+  $('modal-stats').innerHTML = [
+    `<span style="color:var(--amber)">EUR ${fmtEur(c.eur_price)}</span>`,
+    `<span style="color:var(--cyan)">USD ${fmtUsd(c.usd_price)}</span>`,
+    deltaHtml,
+    c.surplus ? `<span style="color:var(--amber)">A la venta${c.sale_price != null ? ' · ' + fmtEur(c.sale_price) : ''}${c.sale_flag === 'Revisar' ? ' · revisar' : ''}</span>` : '',
+    c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">Cardmarket ↗</a>` : '',
+  ].filter(Boolean).join('');
+
+  if (modalChart) { modalChart.destroy(); modalChart = null; }
+  if (spark.length >= 2) {
+    const n = spark.length;
+    modalChart = new Chart($('modal-chart'), {
+      type: 'line',
+      data: {
+        labels: spark.map((_, i) => i === n - 1 ? 'hoy' : `${i - n + 1}d`),
+        datasets: [{
+          data: spark,
+          borderColor: '#fbbf24',
+          backgroundColor: 'rgba(251,191,36,0.08)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.3,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ' ' + fmtEur(ctx.parsed.y) } },
+        },
+        scales: {
+          x: { ticks: { color: '#98a2b3', maxTicksLimit: 6 }, grid: { color: '#1c2026' } },
+          y: { ticks: { color: '#fbbf24', callback: v => '€' + v }, grid: { color: '#1c2026' } },
+        }
+      }
+    });
+  }
+  $('card-modal').classList.add('open');
+  lastFocused = document.activeElement;
+  $('modal-close').focus();
+}
+
+function closeCardModal() {
+  $('card-modal').classList.remove('open');
+  if (modalChart) { modalChart.destroy(); modalChart = null; }
+  if (lastFocused && lastFocused.focus) lastFocused.focus();
+  lastFocused = null;
+}
+
+// Focus trap: mantiene el tabulador dentro del modal mientras está abierto.
+function trapModalFocus(e) {
+  const modal = $('card-modal');
+  if (e.key !== 'Tab' || !modal.classList.contains('open')) return;
+  const focusables = modal.querySelectorAll('a[href],button,[tabindex]:not([tabindex="-1"])');
+  if (!focusables.length) return;
+  const first = focusables[0], last = focusables[focusables.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+}
+
+function renderCards(cards) {
+  if (!cards.length) return;
+  $('sec-cards').style.display = '';
+  allCards = cards;
+
+  // Sort headers (click + teclado Enter/Espacio, con aria-sort)
+  function doSort(th) {
+    const col = th.dataset.col;
+    document.querySelectorAll('th[data-col]').forEach(t => {
+      if (t !== th) { t.classList.remove('sort-asc', 'sort-desc'); t.removeAttribute('aria-sort'); }
+    });
+    if (sortCol === col) {
+      sortDir *= -1;
+    } else {
+      sortCol = col;
+      sortDir = -1;
+    }
+    th.classList.toggle('sort-asc',  sortDir ===  1);
+    th.classList.toggle('sort-desc', sortDir === -1);
+    th.setAttribute('aria-sort', sortDir === 1 ? 'ascending' : 'descending');
+    sortCards();
+    page = 0;
+    renderTable();
+  }
+  document.querySelectorAll('th[data-col]').forEach(th => {
+    th.addEventListener('click', () => doSort(th));
+    th.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); doSort(th); }
+    });
+  });
+
+  populateFilters(cards);
+  $('card-search').addEventListener('input', applyFilter);
+  $('filter-pool').addEventListener('change', applyFilter);
+  $('filter-set').addEventListener('change', applyFilter);
+  $('filter-rarity').addEventListener('change', applyFilter);
+  // Si no hay ninguna carta a la venta, el filtro no aporta nada
+  if (!cards.some(c => c.surplus)) $('filter-pool').style.display = 'none';
+
+  // Fila → modal (click o Enter/Espacio); los enlaces ↗ siguen funcionando
+  function openRow(tr) {
+    const c = allCards.find(x => x.variant === tr.dataset.variant);
+    if (c) openCardModal(c);
+  }
+  $('cards-tbody').addEventListener('click', e => {
+    if (e.target.closest('a')) return;
+    const tr = e.target.closest('tr[data-variant]');
+    if (tr) openRow(tr);
+  });
+  $('cards-tbody').addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const tr = e.target.closest('tr[data-variant]');
+    if (tr) { e.preventDefault(); openRow(tr); }
+  });
+  $('modal-close').addEventListener('click', closeCardModal);
+  $('card-modal').addEventListener('click', e => { if (e.target === $('card-modal')) closeCardModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeCardModal();
+    trapModalFocus(e);
+  });
+
+  applyFilter();
+}
+
+/* ─── Color por variación (compartido treemap + heatmap) ─────────────────── */
+function varColor(pct) {
+  if (pct == null) return '#2a2f37';
+  if (pct <= -15) return '#f87171';
+  if (pct <   -2) return '#3a1a1a';
+  if (pct <=   2) return '#2a2f37';
+  if (pct <   15) return '#1a3a25';
+  return '#4ade80';
+}
+
+/* ─── Treemap squarified (cartas por precio unitario, color = variación 30d) */
+function treemapLayout(items, X, Y, W, H) {
+  const out = [];
+  let nodes = items.slice(), x = X, y = Y, w = W, h = H;
+  while (nodes.length && w > 0.5 && h > 0.5) {
+    const free = w * h;
+    const totalVal = nodes.reduce((s, n) => s + n.value, 0) || 1;
+    const areas = nodes.map(n => n.value / totalVal * free);
+    const short = Math.min(w, h);
+    const worst = len => {
+      let sum = 0, mx = -Infinity, mn = Infinity;
+      for (let k = 0; k < len; k++) { const a = areas[k]; sum += a; mx = Math.max(mx, a); mn = Math.min(mn, a); }
+      const s2 = short * short, sum2 = sum * sum;
+      return Math.max(s2 * mx / sum2, sum2 / (s2 * mn));
+    };
+    let len = 1;
+    while (len < nodes.length && worst(len + 1) <= worst(len)) len++;
+    const rowAreas = areas.slice(0, len);
+    const rowSum = rowAreas.reduce((s, a) => s + a, 0);
+    if (w >= h) {
+      const cw = rowSum / h; let yy = y;
+      for (let k = 0; k < len; k++) { const nh = rowAreas[k] / cw; out.push({ node: nodes[k], x, y: yy, w: cw, h: nh }); yy += nh; }
+      x += cw; w -= cw;
+    } else {
+      const rh = rowSum / w; let xx = x;
+      for (let k = 0; k < len; k++) { const nw = rowAreas[k] / rh; out.push({ node: nodes[k], x: xx, y, w: nw, h: rh }); xx += nw; }
+      y += rh; h -= rh;
+    }
+    nodes = nodes.slice(len);
+  }
+  return out;
+}
+
+function renderTreemap(cards) {
+  const top = cards.filter(c => c.eur_price > 0)
+    .sort((a, b) => b.eur_price - a.eur_price).slice(0, 60);
+  if (top.length < 3) return;
+  $('sec-treemap').style.display = '';
+  const el = $('treemap');
+  const draw = () => {
+    const W = el.clientWidth || 600, H = el.clientHeight || 300;
+    const tiles = treemapLayout(top.map(c => ({ value: c.eur_price, c })), 0, 0, W, H);
+    el.innerHTML = tiles.map(t => {
+      const c = t.node.c, big = t.w > 56 && t.h > 30;
+      const lbl = big ? `<div class="tm-label">${esc(c.name || c.variant)}</div><div class="tm-val">${fmtEur(c.eur_price)}</div>` : '';
+      return `<div class="tm-tile" data-variant="${esc(c.variant)}" tabindex="0" role="button" aria-label="${esc(c.name || c.variant)} ${fmtEur(c.eur_price)}" title="${esc(c.name || c.variant)} · ${fmtEur(c.eur_price)} · 30d ${fmtPct(c.eur_pct_30d)}" style="left:${t.x}px;top:${t.y}px;width:${t.w}px;height:${t.h}px;background:${varColor(c.eur_pct_30d)}">${lbl}</div>`;
+    }).join('');
+    const open = tile => { const c = cards.find(x => x.variant === tile.dataset.variant); if (c) openCardModal(c); };
+    el.querySelectorAll('.tm-tile').forEach(t => {
+      t.addEventListener('click', () => open(t));
+      t.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(t); } });
+    });
+  };
+  draw();
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(draw, 200); });
+}
+
+/* ─── Heatmap de variación por set × rareza ──────────────────────────────── */
+function renderHeatmap(cards) {
+  const sets = [...new Set(cards.map(c => c.set).filter(Boolean))];
+  const order = ['Legendary', 'Epic', 'Rare', 'Uncommon', 'Common'];
+  const rars = [...new Set(cards.map(c => c.rarity).filter(Boolean))]
+    .sort((a, b) => (order.indexOf(a) < 0 ? 99 : order.indexOf(a)) - (order.indexOf(b) < 0 ? 99 : order.indexOf(b)));
+  if (!sets.length || !rars.length) return;
+  $('sec-heatmap').style.display = '';
+  const draw = period => {
+    const agg = {};
+    for (const c of cards) {
+      if (!c.set || !c.rarity || c[period] == null) continue;
+      const k = c.set + '|' + c.rarity;
+      (agg[k] = agg[k] || { sum: 0, n: 0 });
+      agg[k].sum += c[period]; agg[k].n++;
+    }
+    let html = '<table class="heatmap"><thead><tr><th></th>' +
+      rars.map(r => `<th>${esc(r)}</th>`).join('') + '</tr></thead><tbody>';
+    for (const s of sets) {
+      html += `<tr><th>${esc(s)}</th>`;
+      for (const r of rars) {
+        const a = agg[s + '|' + r];
+        if (!a) { html += '<td class="empty">·</td>'; continue; }
+        const avg = a.sum / a.n;
+        html += `<td class="cell" title="${esc(s)} · ${esc(r)} · media ${fmtPct(avg)} · ${a.n} cartas" style="background:${varColor(avg)}">${a.n}</td>`;
+      }
+      html += '</tr>';
+    }
+    $('heatmap').innerHTML = html + '</tbody></table>';
+  };
+  draw('eur_pct_7d');
+  $('heatmap-period').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    $('heatmap-period').querySelectorAll('button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); draw(b.dataset.p);
+  }));
+}
+
+/* ─── Comparador de cartas ───────────────────────────────────────────────── */
+const CMP_COLORS = ['#67e8f9', '#fbbf24', '#4ade80', '#c084fc'];
+let cmpCards = [], cmpMode = 'abs', cmpChart = null;
+function renderComparator(cards) {
+  const pool = cards.filter(c => Array.isArray(c.spark) && c.spark.length >= 2);
+  if (pool.length < 2) return;
+  $('sec-compare').style.display = '';
+  const idx = new Map();
+  $('cmp-list').innerHTML = pool.map(c => {
+    const lbl = `${c.variant} — ${c.name || ''}`.trim();
+    idx.set(lbl, c); idx.set(c.variant, c);
+    return `<option value="${esc(lbl)}"></option>`;
+  }).join('');
+  $('cmp-search').addEventListener('change', () => {
+    const v = $('cmp-search').value.trim();
+    const c = idx.get(v) || idx.get(v.split(' — ')[0]);
+    if (c && !cmpCards.find(x => x.variant === c.variant) && cmpCards.length < 4) { cmpCards.push(c); drawCmp(); }
+    $('cmp-search').value = '';
+  });
+  $('cmp-mode').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    cmpMode = b.dataset.m;
+    $('cmp-mode').querySelectorAll('button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); drawCmp();
+  }));
+  drawCmp();
+}
+function drawCmp() {
+  $('cmp-chips').innerHTML = cmpCards.map((c, i) =>
+    `<span class="cmp-chip" style="border-color:${CMP_COLORS[i]}"><span style="color:${CMP_COLORS[i]}">${esc(c.name || c.variant)}</span><button data-i="${i}" aria-label="Quitar ${esc(c.name || c.variant)}">×</button></span>`
+  ).join('');
+  $('cmp-chips').querySelectorAll('button').forEach(b =>
+    b.addEventListener('click', () => { cmpCards.splice(+b.dataset.i, 1); drawCmp(); }));
+  if (cmpChart) { cmpChart.destroy(); cmpChart = null; }
+  const hint = $('cmp-hint');
+  if (!cmpCards.length) {
+    hint.textContent = 'Añade hasta 4 cartas para comparar su evolución. "Índice 100" normaliza para comparar tendencias.';
+    return;
+  }
+  const maxLen = Math.max(...cmpCards.map(c => c.spark.length));
+  const labels = Array.from({ length: maxLen }, (_, i) => i === maxLen - 1 ? 'hoy' : `${i - maxLen + 1}d`);
+  const datasets = cmpCards.map((c, i) => {
+    const s = c.spark.slice();
+    const data = s.map(v => cmpMode === 'idx' && s[0] ? v / s[0] * 100 : v);
+    return {
+      label: c.name || c.variant,
+      data: Array(maxLen - s.length).fill(null).concat(data),
+      borderColor: CMP_COLORS[i], backgroundColor: 'transparent',
+      borderWidth: 2, tension: 0.3, pointRadius: 0, pointHoverRadius: 4, spanGaps: false,
+    };
+  });
+  cmpChart = new Chart($('cmp-chart'), {
+    type: 'line', data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: true, labels: { color: '#98a2b3', boxWidth: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${cmpMode === 'idx' ? ctx.parsed.y.toFixed(1) : fmtEur(ctx.parsed.y)}` } },
+      },
+      scales: {
+        x: { ticks: { color: '#98a2b3', maxTicksLimit: 6 }, grid: { color: '#1c2026' } },
+        y: { ticks: { color: '#98a2b3', callback: v => cmpMode === 'idx' ? v : '€' + v }, grid: { color: '#1c2026' } },
+      }
+    }
+  });
+  hint.textContent = cmpMode === 'idx'
+    ? 'Índice 100 = primer día de cada carta; compara tendencias relativas.'
+    : 'Precio EUR absoluto por día.';
+}
+
+/* ─── Sobrantes a la venta ───────────────────────────────────────────────── */
+// Lista de lo que está a la venta con SU precio de venta: el mismo "Price"
+// que lleva powertools_sobrantes.csv a TCG PowerTools. Sin cantidades.
+let sobAll = [], sobFiltered = [], sobHasListed = false;
+let sobSortCol = 'sale_price', sobSortDir = -1, sobPage = 0;
+
+function sobStateBadge(c) {
+  if (c.sale_price == null) return '<span class="badge badge-noprice" title="Cardmarket no tiene precio de tendencia para esta variante">Sin precio</span>';
+  if (c.sale_flag === 'Revisar') return '<span class="badge badge-review" title="El precio de venta queda más de un 15 % por encima del mínimo listado en Cardmarket: mira la competencia antes de listar">Revisar</span>';
+  return '<span class="badge badge-ok" title="Precio de venta en línea con el mercado">OK</span>';
+}
+
+// Desvío del precio listado en Cardmarket respecto a la referencia (%), o null
+const ALIGN_PCT = 15, ALIGN_MIN_EUR = 0.10;
+function sobDeviation(c) {
+  if (c.listed_price == null || !c.sale_price) return null;
+  return (c.listed_price / c.sale_price - 1) * 100;
+}
+// Desalineada = se aleja más del % Y de los céntimos mínimos (en cartas de 3 céntimos un 100 % no dice nada)
+function sobMisaligned(c) {
+  const d = sobDeviation(c);
+  return d != null && Math.abs(d) >= ALIGN_PCT && Math.abs(c.listed_price - c.sale_price) >= ALIGN_MIN_EUR;
+}
+function sobListedCell(c) {
+  if (c.listed_price == null) return '<td style="color:var(--muted)">—</td>';
+  const dev = sobDeviation(c);
+  const mis = sobMisaligned(c);
+  const cls = !mis ? 'flat' : dev < 0 ? 'dn' : 'up';
+  const tip = dev == null ? '' : ` title="${dev >= 0 ? '+' : ''}${dev.toFixed(0)} % respecto a la referencia"`;
+  return `<td class="${cls}"${tip}>${fmtEur(c.listed_price)}${mis ? ` <span style="font-size:10px">${dev > 0 ? '▲' : '▼'}</span>` : ''}</td>`;
+}
+
+function sobSort() {
+  const col = sobSortCol, dir = sobSortDir;
+  const numeric = col === 'sale_price' || col === 'eur_price' || col === 'eur_pct_7d' || col === 'listed_price';
+  sobFiltered.sort((a, b) => {
+    let av = a[col], bv = b[col];
+    if (av == null) av = numeric ? -Infinity : '';
+    if (bv == null) bv = numeric ? -Infinity : '';
+    if (typeof av === 'string') return dir * av.localeCompare(bv) || a.variant.localeCompare(b.variant);
+    return dir * (av - bv) || a.variant.localeCompare(b.variant);
+  });
+}
+
+function sobRenderTable() {
+  const start = sobPage * PAGE;
+  $('sob-tbody').innerHTML = sobFiltered.slice(start, start + PAGE).map(c => {
+    const link  = c.url ? ` <a href="${esc(c.url)}" target="_blank" rel="noopener" style="font-size:10px;color:var(--muted)">↗</a>` : '';
+    const p7cls = c.eur_pct_7d > 0 ? 'up' : c.eur_pct_7d < 0 ? 'dn' : 'flat';
+    return `<tr data-variant="${esc(c.variant)}" tabindex="0" role="button" aria-label="Ver detalle de ${esc(c.name || c.variant)}">
+      <td class="t-vn">${esc(c.variant)}</td>
+      <td class="t-name">${esc(c.name)}${link}</td>
+      <td style="color:var(--muted)">${esc(c.set) || '—'}</td>
+      <td style="color:var(--muted)">${esc(c.variant_label) || 'Standard'}</td>
+      <td style="color:var(--muted)">${esc(c.rarity) || '—'}</td>
+      <td style="color:var(--amber)">${c.eur_price != null ? fmtEur(c.eur_price) : '—'}</td>
+      <td style="font-weight:700">${c.sale_price != null ? fmtEur(c.sale_price) : '—'}</td>
+      ${sobHasListed ? sobListedCell(c) : ''}
+      <td class="${p7cls}">${c.eur_pct_7d != null ? fmtPct(c.eur_pct_7d) : '—'}</td>
+      <td>${sobStateBadge(c)}</td>
+    </tr>`;
+  }).join('');
+
+  const total = Math.ceil(sobFiltered.length / PAGE);
+  const pg = $('sob-pagination');
+  if (total <= 1) { pg.innerHTML = ''; return; }
+  pg.innerHTML = `
+    <button class="pg-btn" id="sob-prev" ${sobPage === 0 ? 'disabled' : ''}>‹ Ant.</button>
+    <span class="pg-info">Pág. ${sobPage + 1} / ${total} (${sobFiltered.length})</span>
+    <button class="pg-btn" id="sob-next" ${sobPage >= total - 1 ? 'disabled' : ''}>Sig. ›</button>`;
+  $('sob-prev')?.addEventListener('click', () => { sobPage--; sobRenderTable(); });
+  $('sob-next')?.addEventListener('click', () => { sobPage++; sobRenderTable(); });
+}
+
+function sobApplyFilter() {
+  const q     = $('sob-search').value.trim().toLowerCase();
+  const fSet  = $('sob-set').value;
+  const fSt   = $('sob-state').value;
+  sobFiltered = sobAll.filter(c => {
+    if (fSet && c.set !== fSet) return false;
+    if (fSt === 'review' && c.sale_flag !== 'Revisar') return false;
+    if (fSt === 'ok' && (c.sale_flag === 'Revisar' || c.sale_price == null)) return false;
+    if (fSt === 'misaligned' && !sobMisaligned(c)) return false;
+    if (!q) return true;
+    return (c.name || '').toLowerCase().includes(q) ||
+           (c.variant || '').toLowerCase().includes(q) ||
+           (c.set || '').toLowerCase().includes(q) ||
+           (c.variant_label || '').toLowerCase().includes(q);
+  });
+  sobSort();
+  sobPage = 0;
+  sobRenderTable();
+}
+
+function renderSobrantes(cards, bd) {
+  sobAll = (cards || []).filter(c => c.surplus);
+  if (!sobAll.length) return;
+  $('sec-sobrantes').style.display = '';
+
+  // Columna "En Cardmarket" sólo cuando hay una foto de stock de PowerTools
+  sobHasListed = sobAll.some(c => c.listed_price != null);
+  if (!sobHasListed) {
+    $('sob-th-listed').style.display = 'none';
+    $('sob-state').querySelector('option[value="misaligned"]').disabled = true;
+  }
+
+  // KPIs: agregados (sin cantidades por carta), como en el desglose
+  const sp = (bd && bd.surplus) || {};
+  const review  = sobAll.filter(c => c.sale_flag === 'Revisar').length;
+  const noPrice = sobAll.filter(c => c.sale_price == null).length;
+  const misaligned = sobAll.filter(sobMisaligned).length;
+  const lst = sp.listed || null;
+  $('sob-kpis').innerHTML = [
+    ['A la venta', `${sobAll.length}`, 'cartas con copias de sobra', ''],
+    ['Valor Cardmarket', sp.value_eur != null ? fmtEur(sp.value_eur) : '—', 'a precio de tendencia', 'var(--amber)'],
+    ['A precio de venta', sp.sale_eur != null ? fmtEur(sp.sale_eur) : '—', 'lo que va a PowerTools', ''],
+    ['Para revisar', `${review}`, noPrice ? `+ ${noPrice} sin precio` : 'precio muy por encima del mínimo', review ? 'var(--red)' : 'var(--green)'],
+    // Foto de stock de PowerTools: precio listado vs referencia
+    sobHasListed
+      ? ['Desalineadas', `${misaligned}`, `de ${sobAll.filter(c => c.listed_price != null).length} listadas (±${ALIGN_PCT} % y ±${fmtEur(ALIGN_MIN_EUR)})${lst && lst.date ? ' · foto ' + lst.date : ''}`, misaligned ? 'var(--amber)' : 'var(--green)']
+      : null,
+    // Ventas (de ventas_log.json, alimentado por el export de Cardmarket)
+    sp.sales && sp.sales.units_total
+      ? ['Vendidas 30d', `${sp.sales.units_30d}`, `${fmtEur(sp.sales.revenue_30d)} · total ${sp.sales.units_total} uds / ${fmtEur(sp.sales.revenue_total)}`, 'var(--green)']
+      : null,
+  ].filter(Boolean).map(([l, v, s, col]) =>
+    `<div class="kpi"><div class="lbl">${l}</div><div class="val"${col ? ` style="color:${col}"` : ''}>${v}</div><div class="sub">${s}</div></div>`
+  ).join('');
+
+  const rule = sp.rule || {};
+  const pct  = rule.undercut_pct != null ? (rule.undercut_pct * 100).toLocaleString('es-ES') + ' %' : '3 %';
+  const eur  = rule.undercut_eur != null ? fmtEur(rule.undercut_eur) : '0,01 €';
+  const min  = rule.min_eur != null ? fmtEur(rule.min_eur) : '0,02 €';
+  $('sob-rule').innerHTML =
+    `<b>Vender a</b> = media de ventas de 7 días en Cardmarket − ${eur}; sin ventas en la semana, tendencia − ${pct}; nunca por debajo de ${min}. ` +
+    `Es la misma regla que el bot de TCG PowerTools (Price Guide AVG7, respaldo Trend), recalculada cada mañana. ` +
+    `<b>Revisar</b> = queda más de un 15 % por encima del mínimo listado en Cardmarket.` +
+    (sobHasListed ? ` <b>En Cardmarket</b> = precio real de tu listado según la última foto de stock de PowerTools; ▲▼ cuando se aleja más de un ${ALIGN_PCT} % (y ${fmtEur(ALIGN_MIN_EUR)}) de la referencia.` : '');
+
+  const sets = [...new Set(sobAll.map(c => c.set).filter(Boolean))].sort();
+  $('sob-set').innerHTML = '<option value="">Todos los sets</option>' +
+    sets.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
+
+  function doSort(th) {
+    const col = th.dataset.scol;
+    document.querySelectorAll('#sec-sobrantes th[data-scol]').forEach(t => {
+      if (t !== th) { t.classList.remove('sort-asc', 'sort-desc'); t.removeAttribute('aria-sort'); }
+    });
+    if (sobSortCol === col) sobSortDir *= -1; else { sobSortCol = col; sobSortDir = -1; }
+    th.classList.toggle('sort-asc',  sobSortDir ===  1);
+    th.classList.toggle('sort-desc', sobSortDir === -1);
+    th.setAttribute('aria-sort', sobSortDir === 1 ? 'ascending' : 'descending');
+    sobSort(); sobPage = 0; sobRenderTable();
+  }
+  document.querySelectorAll('#sec-sobrantes th[data-scol]').forEach(th => {
+    th.addEventListener('click', () => doSort(th));
+    th.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); doSort(th); }
+    });
+  });
+  $('sob-search').addEventListener('input', sobApplyFilter);
+  $('sob-set').addEventListener('change', sobApplyFilter);
+  $('sob-state').addEventListener('change', sobApplyFilter);
+
+  // Fila → mismo modal de detalle que la tabla general
+  function openRow(tr) {
+    const c = sobAll.find(x => x.variant === tr.dataset.variant);
+    if (c) openCardModal(c);
+  }
+  $('sob-tbody').addEventListener('click', e => {
+    if (e.target.closest('a')) return;
+    const tr = e.target.closest('tr[data-variant]');
+    if (tr) openRow(tr);
+  });
+  $('sob-tbody').addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const tr = e.target.closest('tr[data-variant]');
+    if (tr) { e.preventDefault(); openRow(tr); }
+  });
+
+  sobApplyFilter();
+}
+
+/* ─── Bootstrap ─────────────────────────────────────────────────────────── */
+initTabs();
+
+(async () => {
+  try {
+    // Qué juego es (el mismo index.html sirve para Riftbound y Digimon)
+    const meta = await loadJson('data/meta.json').catch(() => null);
+    if (meta && meta.name) {
+      $('logo-name').textContent = `${meta.name} Tracker`;
+      if (meta.emoji) $('logo-emoji').textContent = meta.emoji;
+      document.title = `${meta.name} Tracker — precios de la colección`;
+      const others = (meta.games || []).filter(g => g.slug !== meta.game);
+      $('game-switch').innerHTML = others.map(g =>
+        `<a href="${esc(g.path)}" style="color:var(--muted)">${esc(g.emoji || '')} ${esc(g.name)}</a>`).join(' · ');
+    }
+    const [snaps, moversUsd, moversEur, buyouts, breakdown, cards] = await Promise.all([
+      loadJson('data/snapshots.json'),
+      loadJson('data/movers_usd.json').catch(() => []),
+      loadJson('data/movers_eur.json').catch(() => []),
+      loadJson('data/buyouts.json').catch(() => []),
+      loadJson('data/breakdown.json').catch(() => null),
+      loadJson('data/cards.json').catch(() => []),
+    ]);
+
+    if (!Array.isArray(snaps) || !snaps.length) {
+      document.querySelector('.wrap').innerHTML =
+        '<p style="color:var(--muted);padding:60px 0;text-align:center">Aún no hay datos. El primer snapshot aparece tras la primera ejecución del workflow.</p>';
+      return;
+    }
+
+    renderHero(snaps, moversUsd, moversEur, buyouts);
+    renderHistory(snaps);
+    renderBuyouts(buyouts);
+    renderMovers(moversUsd, moversEur);
+    renderTopTrends(cards);
+    renderBreakdown(breakdown);
+    renderSobrantes(cards, breakdown);
+    renderTreemap(cards);
+    renderHeatmap(cards);
+    renderComparator(cards);
+    renderCards(cards);
+
+  } catch (e) {
+    document.querySelector('.wrap').innerHTML =
+      `<p style="color:var(--red);padding:60px 0;text-align:center">Error cargando datos: ${e.message}</p>`;
+  }
+})();
+
+/* ─── PWA: service worker (offline + carga instantánea) ──────────────────── */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>
