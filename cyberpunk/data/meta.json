@@ -1,0 +1,25 @@
+{
+  "game": "cyberpunk",
+  "name": "Cyberpunk TCG",
+  "emoji": "🤖",
+  "games": [
+    {
+      "slug": "riftbound",
+      "name": "Riftbound",
+      "emoji": "🎴",
+      "path": "../"
+    },
+    {
+      "slug": "digimon",
+      "name": "Digimon Card Game",
+      "emoji": "🧡",
+      "path": "../digimon/"
+    },
+    {
+      "slug": "cyberpunk",
+      "name": "Cyberpunk TCG",
+      "emoji": "🤖",
+      "path": "./"
+    }
+  ]
+}
