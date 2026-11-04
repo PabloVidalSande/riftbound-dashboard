@@ -11,12 +11,6 @@
       "value_eur": 57.64,
       "pct": 40.3,
       "variants": 73
-    },
-    {
-      "set": "Welcome to Night City - Retail",
-      "value_eur": 0.0,
-      "pct": 0.0,
-      "variants": 1
     }
   ],
   "by_rarity": [
@@ -55,12 +49,6 @@
       "value_eur": 9.64,
       "pct": 6.7,
       "variants": 36
-    },
-    {
-      "rarity": "",
-      "value_eur": 0.0,
-      "pct": 0.0,
-      "variants": 1
     }
   ],
   "surplus": {
