@@ -52,9 +52,9 @@
     }
   ],
   "surplus": {
-    "variants": 33,
-    "value_eur": 4.39,
-    "sale_eur": 3.72,
+    "variants": 3,
+    "value_eur": 0.21,
+    "sale_eur": 0.28,
     "review": 0,
     "rule": {
       "base": "avg7",
