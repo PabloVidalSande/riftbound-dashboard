@@ -2,46 +2,46 @@
   "by_set": [
     {
       "set": "EX-13 Chivalrous XIII",
-      "value_eur": 122.65,
+      "value_eur": 124.85,
       "pct": 100.0,
       "variants": 73
     }
   ],
   "by_rarity": [
     {
-      "rarity": "SR",
-      "value_eur": 26.99,
-      "pct": 22.0,
-      "variants": 6
-    },
-    {
       "rarity": "U",
-      "value_eur": 26.52,
-      "pct": 21.6,
+      "value_eur": 27.17,
+      "pct": 21.8,
       "variants": 21
     },
     {
+      "rarity": "SR",
+      "value_eur": 26.84,
+      "pct": 21.5,
+      "variants": 6
+    },
+    {
       "rarity": "C",
-      "value_eur": 24.56,
-      "pct": 20.0,
+      "value_eur": 24.55,
+      "pct": 19.7,
       "variants": 24
     },
     {
-      "rarity": "UR",
-      "value_eur": 17.38,
-      "pct": 14.2,
-      "variants": 2
-    },
-    {
       "rarity": "SEC",
-      "value_eur": 17.1,
-      "pct": 13.9,
+      "value_eur": 18.12,
+      "pct": 14.5,
       "variants": 1
     },
     {
+      "rarity": "UR",
+      "value_eur": 17.3,
+      "pct": 13.9,
+      "variants": 2
+    },
+    {
       "rarity": "R",
-      "value_eur": 9.46,
-      "pct": 7.7,
+      "value_eur": 10.23,
+      "pct": 8.2,
       "variants": 18
     },
     {
@@ -53,7 +53,7 @@
   ],
   "surplus": {
     "variants": 73,
-    "value_eur": 122.65,
+    "value_eur": 124.85,
     "sale_eur": 134.49,
     "review": 10,
     "rule": {
