@@ -2,32 +2,32 @@
   "by_set": [
     {
       "set": "Radiance",
-      "value_eur": 574.37,
-      "pct": 46.5,
+      "value_eur": 529.24,
+      "pct": 44.5,
       "variants": 195
     },
     {
       "set": "Origins",
-      "value_eur": 318.51,
-      "pct": 25.8,
+      "value_eur": 318.52,
+      "pct": 26.8,
       "variants": 314
     },
     {
       "set": "Spiritforged",
-      "value_eur": 149.31,
-      "pct": 12.1,
+      "value_eur": 148.41,
+      "pct": 12.5,
       "variants": 234
     },
     {
       "set": "Unleashed",
-      "value_eur": 104.96,
-      "pct": 8.5,
+      "value_eur": 105.68,
+      "pct": 8.9,
       "variants": 205
     },
     {
       "set": "Vendetta",
-      "value_eur": 81.49,
-      "pct": 6.6,
+      "value_eur": 81.19,
+      "pct": 6.8,
       "variants": 160
     },
     {
@@ -39,7 +39,7 @@
     {
       "set": "Unleashed | Nexus Night",
       "value_eur": 1.79,
-      "pct": 0.1,
+      "pct": 0.2,
       "variants": 11
     },
     {
@@ -50,7 +50,7 @@
     },
     {
       "set": "Proving Grounds",
-      "value_eur": 0.51,
+      "value_eur": 0.53,
       "pct": 0.0,
       "variants": 1
     }
@@ -58,39 +58,39 @@
   "by_rarity": [
     {
       "rarity": "Showcase",
-      "value_eur": 548.58,
-      "pct": 44.4,
+      "value_eur": 505.08,
+      "pct": 42.4,
       "variants": 18
     },
     {
       "rarity": "Rare",
-      "value_eur": 218.11,
-      "pct": 17.7,
+      "value_eur": 219.07,
+      "pct": 18.4,
       "variants": 269
     },
     {
       "rarity": "Common",
-      "value_eur": 193.28,
-      "pct": 15.6,
+      "value_eur": 190.41,
+      "pct": 16.0,
       "variants": 440
     },
     {
       "rarity": "Uncommon",
-      "value_eur": 159.73,
-      "pct": 12.9,
+      "value_eur": 161.09,
+      "pct": 13.5,
       "variants": 368
     },
     {
       "rarity": "Epic",
-      "value_eur": 115.86,
-      "pct": 9.4,
+      "value_eur": 114.33,
+      "pct": 9.6,
       "variants": 38
     }
   ],
   "surplus": {
     "variants": 621,
-    "value_eur": 418.48,
-    "sale_eur": 490.91,
+    "value_eur": 397.68,
+    "sale_eur": 459.51,
     "review": 65,
     "rule": {
       "base": "avg7",
