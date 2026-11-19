@@ -2,32 +2,32 @@
   "by_set": [
     {
       "set": "Radiance",
-      "value_eur": 585.89,
-      "pct": 46.8,
+      "value_eur": 615.2,
+      "pct": 47.9,
       "variants": 195
     },
     {
       "set": "Origins",
-      "value_eur": 316.94,
-      "pct": 25.3,
+      "value_eur": 317.53,
+      "pct": 24.7,
       "variants": 314
     },
     {
       "set": "Spiritforged",
-      "value_eur": 151.71,
-      "pct": 12.1,
+      "value_eur": 153.13,
+      "pct": 11.9,
       "variants": 234
     },
     {
       "set": "Unleashed",
-      "value_eur": 110.18,
-      "pct": 8.8,
+      "value_eur": 111.74,
+      "pct": 8.7,
       "variants": 205
     },
     {
       "set": "Vendetta",
-      "value_eur": 81.45,
-      "pct": 6.5,
+      "value_eur": 80.36,
+      "pct": 6.3,
       "variants": 160
     },
     {
@@ -50,7 +50,7 @@
     },
     {
       "set": "Proving Grounds",
-      "value_eur": 0.58,
+      "value_eur": 0.54,
       "pct": 0.0,
       "variants": 1
     }
@@ -58,40 +58,40 @@
   "by_rarity": [
     {
       "rarity": "Showcase",
-      "value_eur": 553.53,
-      "pct": 44.2,
+      "value_eur": 573.31,
+      "pct": 44.6,
       "variants": 18
     },
     {
       "rarity": "Rare",
-      "value_eur": 222.09,
-      "pct": 17.7,
+      "value_eur": 222.98,
+      "pct": 17.4,
       "variants": 269
     },
     {
       "rarity": "Common",
-      "value_eur": 191.05,
-      "pct": 15.2,
+      "value_eur": 194.1,
+      "pct": 15.1,
       "variants": 440
     },
     {
       "rarity": "Uncommon",
-      "value_eur": 166.29,
+      "value_eur": 170.87,
       "pct": 13.3,
       "variants": 368
     },
     {
       "rarity": "Epic",
-      "value_eur": 120.2,
+      "value_eur": 123.65,
       "pct": 9.6,
       "variants": 38
     }
   ],
   "surplus": {
     "variants": 621,
-    "value_eur": 425.52,
-    "sale_eur": 452.68,
-    "review": 66,
+    "value_eur": 441.54,
+    "sale_eur": 465.43,
+    "review": 70,
     "rule": {
       "base": "avg7",
       "undercut_eur": 0.01,
