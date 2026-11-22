@@ -2,32 +2,32 @@
   "by_set": [
     {
       "set": "Radiance",
-      "value_eur": 620.7,
-      "pct": 48.3,
+      "value_eur": 637.01,
+      "pct": 49.0,
       "variants": 195
     },
     {
       "set": "Origins",
-      "value_eur": 315.97,
-      "pct": 24.6,
+      "value_eur": 317.73,
+      "pct": 24.4,
       "variants": 314
     },
     {
       "set": "Spiritforged",
-      "value_eur": 150.71,
-      "pct": 11.7,
+      "value_eur": 148.38,
+      "pct": 11.4,
       "variants": 234
     },
     {
       "set": "Unleashed",
-      "value_eur": 111.23,
-      "pct": 8.7,
+      "value_eur": 111.76,
+      "pct": 8.6,
       "variants": 205
     },
     {
       "set": "Vendetta",
-      "value_eur": 78.27,
-      "pct": 6.1,
+      "value_eur": 78.32,
+      "pct": 6.0,
       "variants": 160
     },
     {
@@ -50,7 +50,7 @@
     },
     {
       "set": "Proving Grounds",
-      "value_eur": 0.56,
+      "value_eur": 0.49,
       "pct": 0.0,
       "variants": 1
     }
@@ -58,40 +58,40 @@
   "by_rarity": [
     {
       "rarity": "Showcase",
-      "value_eur": 575.29,
-      "pct": 44.8,
+      "value_eur": 579.56,
+      "pct": 44.6,
       "variants": 18
     },
     {
       "rarity": "Rare",
-      "value_eur": 222.68,
-      "pct": 17.3,
+      "value_eur": 223.72,
+      "pct": 17.2,
       "variants": 269
     },
     {
       "rarity": "Common",
-      "value_eur": 191.41,
-      "pct": 14.9,
+      "value_eur": 196.26,
+      "pct": 15.1,
       "variants": 440
     },
     {
       "rarity": "Uncommon",
-      "value_eur": 171.1,
-      "pct": 13.3,
+      "value_eur": 175.74,
+      "pct": 13.5,
       "variants": 368
     },
     {
       "rarity": "Epic",
-      "value_eur": 123.37,
+      "value_eur": 124.82,
       "pct": 9.6,
       "variants": 38
     }
   ],
   "surplus": {
     "variants": 621,
-    "value_eur": 442.35,
-    "sale_eur": 464.99,
-    "review": 72,
+    "value_eur": 453.53,
+    "sale_eur": 475.0,
+    "review": 73,
     "rule": {
       "base": "avg7",
       "undercut_eur": 0.01,
