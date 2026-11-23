@@ -2,13 +2,13 @@
   "by_set": [
     {
       "set": "Welcome to Night City \u2014 Beta",
-      "value_eur": 88.44,
+      "value_eur": 89.61,
       "pct": 65.8,
       "variants": 51
     },
     {
       "set": "Welcome to Night City \u2014 Retail",
-      "value_eur": 45.88,
+      "value_eur": 46.52,
       "pct": 34.2,
       "variants": 73
     }
@@ -16,44 +16,44 @@
   "by_rarity": [
     {
       "rarity": "Iconic Rare",
-      "value_eur": 62.41,
-      "pct": 46.5,
+      "value_eur": 62.48,
+      "pct": 45.9,
       "variants": 1
     },
     {
       "rarity": "Epic",
-      "value_eur": 36.54,
-      "pct": 27.2,
+      "value_eur": 38.7,
+      "pct": 28.4,
       "variants": 7
     },
     {
       "rarity": "Secret",
-      "value_eur": 13.5,
-      "pct": 10.1,
+      "value_eur": 13.33,
+      "pct": 9.8,
       "variants": 1
     },
     {
       "rarity": "Rare",
-      "value_eur": 8.5,
+      "value_eur": 8.62,
       "pct": 6.3,
       "variants": 30
     },
     {
       "rarity": "Common",
-      "value_eur": 7.23,
-      "pct": 5.4,
+      "value_eur": 7.08,
+      "pct": 5.2,
       "variants": 49
     },
     {
       "rarity": "Uncommon",
-      "value_eur": 6.14,
-      "pct": 4.6,
+      "value_eur": 5.92,
+      "pct": 4.3,
       "variants": 36
     }
   ],
   "surplus": {
     "variants": 3,
-    "value_eur": 0.21,
+    "value_eur": 0.19,
     "sale_eur": 0.23,
     "review": 0,
     "rule": {
